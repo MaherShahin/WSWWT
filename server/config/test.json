@@ -1,0 +1,5 @@
+{
+    "jwtSecret": "jwtSecretToken",
+    "jwtExpiration": 360000
+  }
+  

@@ -4,7 +4,8 @@ import { connect } from "mongoose";
 const connectDB = async () => {
   try {
     const mongoURI: string = config.get("mongoURI");
-    await connect(mongoURI);
+    const mongoose = await connect(mongoURI);
+    mongoose.set("strictQuery", false);
     console.log("MongoDB Connected...");
   } catch (err) {
     console.error(err.message);
