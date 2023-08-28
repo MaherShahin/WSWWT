@@ -1,0 +1,5 @@
+{
+  "mongoURI": "mongodb+srv://abdomaher:Flatronl192ws@cluster0.5mo1r.mongodb.net/?retryWrites=true&w=majority",
+  "jwtSecret": "jwtSecretToken",
+  "jwtExpiration": 360000
+}
