@@ -47,9 +47,7 @@ describe('User Routes', () => {
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty('token');
 
-            // Check if the user was saved to the database
             const savedUser = await User.findOne({ email: user.email });
-            // check that the password was hashed
             expect(savedUser).not.toBeNull();
             expect(savedUser.password).not.toBe(user.password);
 
@@ -111,8 +109,6 @@ describe('User Routes', () => {
             expect(resNoName.status).toBe(400);
             expect(resNoName.body).not.toHaveProperty('token');
 
-
-            // Check if the user was saved to the database
             const queryWrongEmail = await User.findOne({ email: userWrongEmail.email });
             expect(queryWrongEmail).toBeNull();
 
@@ -127,7 +123,6 @@ describe('User Routes', () => {
 
     describe("Invalid Fields User Login", () => {
         it('should not let a user login that doesn\'t exist', async () => {
-            // create req body with email and password
             const fakeUser: TUser = {
                 email: 'fake@notreal.de',
                 username: 'testuser',
