@@ -23,7 +23,7 @@ router.post('/create', auth,
     check('roomType', 'Room type is required').notEmpty(),
     check('description', 'Description is required').notEmpty(),
     check('criteria', 'Criteria is required').notEmpty(),
-    check('maxParticipants', 'Max participants is required').notEmpty(),
+    check('maxParticipants', 'Max participants is required and must be a number').notEmpty().isNumeric(),
   ], validateRequest,
   async (req: Request, res: Response, next: NextFunction) => {
     try {

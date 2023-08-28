@@ -1,6 +1,7 @@
 import { IUser } from "../models/User";
 import bcrypt from "bcryptjs";
 import Room, { IRoom } from "../models/Room";
+import { TRoom } from "../models/Room";
 import Request from "../types/Request";
 import { validateRoomProperties } from "../middleware/validation/roomValidation";
 import HttpStatusCodes from "http-status-codes";
@@ -13,7 +14,7 @@ export async function createRoom(req: Request, user: IUser) {
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(password, salt);
     
-        const room = new Room({
+        const roomFields: TRoom = {
             name,
             password: passwordHash,
             roomType,
@@ -22,9 +23,10 @@ export async function createRoom(req: Request, user: IUser) {
             maxParticipants,
             users: [user._id],
             roomAdmin: user._id,
-        });
+        };
     
-        validateRoomProperties(room);
+        validateRoomProperties(roomFields);
+        const room = new Room(roomFields);
         await room.save();
         return room;
     } catch (err) {

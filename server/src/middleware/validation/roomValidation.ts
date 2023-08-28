@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import HttpStatusCodes from "http-status-codes";
 import { IRoom } from '../../models/Room';
+import { TRoom } from "../../models/Room";
 import { ValidationError } from './ValidationError';
 
 export const validateRoomId = (req: Request, res: Response, next: NextFunction) => {
@@ -17,7 +18,8 @@ export const validateRoomId = (req: Request, res: Response, next: NextFunction) 
     next();
 };
 
-export const validateRoomProperties = (room: IRoom) => {
+export const  validateRoomProperties = (room: TRoom) => {
+
     if (room.roomType === 'private' && !room.password) {
         throw new ValidationError('Password is required for private rooms', HttpStatusCodes.BAD_REQUEST);
     }
@@ -33,4 +35,5 @@ export const validateRoomProperties = (room: IRoom) => {
     if (room.maxParticipants < 1 || room.maxParticipants > 25) {
         throw new ValidationError('Invalid max participants, you must have at least 1 and at most 25 participants', HttpStatusCodes.BAD_REQUEST);
     }
+
 };

@@ -1,5 +1,6 @@
 import request from 'supertest';
-import User, { IUser, TUser } from '../models/User';
+import User, { IUser } from '../models/User';
+import { TUser } from "../models/User";
 import mongoose from 'mongoose';
 import app from '../app';
 

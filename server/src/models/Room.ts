@@ -16,14 +16,14 @@ import User from "./User";
 
 export type TRoom = {
   name: string;
-  description?: string;
+  description: string;
   users: string[];
   currentSeries?: string[];
   password: string;
-  roomAdmin: string;
+  roomAdmin?: string;
   roomType: 'public' | 'private';
-  maxParticipants?: number;
-  criteria?: string[];
+  maxParticipants: number;
+  criteria: string[];
 };
 
 /**
