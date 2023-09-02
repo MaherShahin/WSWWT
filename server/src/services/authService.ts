@@ -6,10 +6,15 @@ import { comparePasswords } from "../utils/encryptionUtils";
 import { UserService } from "./userService";
 import { ValidationError } from "../errors/validationError";
 
+interface LoginResponse {
+  token: string;
+  user: Omit<IUser, 'password'>;
+}  
+
 export class AuthService {
 
-  static async loginUser(email: string, password: string): Promise<string> {
-    const user: IUser = await User.findOne({ email }).select("password"); 
+  static async loginUser(email: string, password: string): Promise<LoginResponse> {
+    const user: IUser = await User.findOne({ email });
 
     if (!user) {
       throw new ValidationError("Invalid credentials");
@@ -31,7 +36,13 @@ export class AuthService {
       { expiresIn: config.get("jwtExpiration") }
     );
 
-    return token;
+    user.password = undefined;
+    
+    const userObj: Omit<IUser, 'password'> = user.toObject();
+    console.log(userObj);
+    
+    return { token, user: userObj };
+
   }
 
   static async registerUser(email: string, username: string, name: string, password: string): Promise<string> {

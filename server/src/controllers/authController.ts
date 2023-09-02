@@ -8,12 +8,12 @@ export class AuthController {
   static register = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const { email, username, name, password } = req.body;
     const token = await AuthService.registerUser(email, username, name, password);
-    res.json({ token });
+    res.status(200).json({ token });
   });
 
   static login = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
-    const token = await AuthService.loginUser(email, password);
-    res.json({ token });
+    const response = await AuthService.loginUser(email, password);
+    res.status(200).json(response);
   });
 }

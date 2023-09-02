@@ -45,4 +45,8 @@ export class UserService {
 
     await user.remove();
   }
+
+  static async findUserById(userId: string): Promise<IUser | null> {
+    return User.findById(userId).select("-password").exec();
+  }
 }

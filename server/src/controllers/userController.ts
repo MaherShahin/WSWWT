@@ -17,4 +17,13 @@ export class UserController {
     await UserService.deleteUser(req.userId);
     res.status(200).send("User deleted");
   });
+
+  static getUserById = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const user = await UserService.findUserById(req.params.id);
+    if (user) {
+      res.status(200).json({ user: user.toObject() });
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  });
 }
