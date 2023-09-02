@@ -1,5 +1,10 @@
-import { Document, model, Schema } from "mongoose";
+import { Document, model, Schema, Types } from "mongoose";
 import User from "./User";
+
+export enum RoomType {
+  PUBLIC = 'public',
+  PRIVATE = 'private'
+}
 
 /**
  * Type to model the Room Schema for TypeScript.
@@ -17,13 +22,17 @@ import User from "./User";
 export type TRoom = {
   name: string;
   description: string;
-  users: string[];
-  currentSeries?: string[];
-  password: string;
-  roomAdmin?: string;
-  roomType: 'public' | 'private';
+  users: Types.ObjectId[];
+  currentSeries: Types.ObjectId[];
+  password?: string;
+  roomAdmin: Types.ObjectId;
+  roomType: RoomType;
   maxParticipants: number;
   criteria: string[];
+
+  // Methods
+  addUser(userId: Types.ObjectId): void;
+  removeUser(userId: Types.ObjectId): void;
 };
 
 /**
@@ -42,45 +51,20 @@ export type TRoom = {
  * @param criteria:string[]
  */
 
-export interface IRoom extends TRoom, Document {}
+export interface IRoom extends TRoom, Document { }
 
 const roomSchema: Schema = new Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-  },
-  users: {
-    type: [String],
-    default: [],
-  },
-  currentSeries: {
-    type: [String],
-    default: [],
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  roomAdmin: {
-    type: String,
-    required: true,
-  },
-  roomType: {
-    type: String,
-    enum: ['public', 'private'],
-    required: true,
-  },
-  maxParticipants: {
-    type: Number,
-  },
-  criteria: {
-    type: [String],
-    default: [],
-  },
+  name: { type: String, required: true },
+  description: { type: String },
+  users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  currentSeries: [{ type: Schema.Types.ObjectId, ref: 'Series' }],
+  password: { type: String, required: false },
+  roomAdmin: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  roomType: { type: String, enum: Object.values(RoomType), required: true },
+  maxParticipants: { type: Number },
+  criteria: { type: [String], default: [] },
 });
+
 
 /**
  * Mongoose Model based on TRoom for TypeScript.
@@ -101,11 +85,23 @@ const roomSchema: Schema = new Schema({
 roomSchema.pre<IRoom>("remove", async function (next) {
   const room = this;
   await User.updateMany(
-      { _id: { $in: room.users }},
-      { $pull: { createdRooms: room._id, joinedRooms: room._id }}
+    { _id: { $in: room.users } },
+    { $pull: { createdRooms: room._id, joinedRooms: room._id } }
   );
   next();
 });
+
+roomSchema.methods = {
+  addUser(userId: Types.ObjectId) {
+    this.users.push(userId);
+  },
+  removeUser(userId: Types.ObjectId) {
+    this.users.pull(userId);
+  },
+  addSeries(seriesId: Types.ObjectId) {
+    this.currentSeries.push(seriesId);
+  }
+};
 
 const Room = model<IRoom>("Room", roomSchema);
 

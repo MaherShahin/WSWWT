@@ -26,6 +26,11 @@ export type TUser = {
   bio: string;
   dateCreated: Date;
   lastLogin: Date;
+
+  //Methods
+  addJoinedRoom(roomId: Types.ObjectId): void;
+  removeJoinedRoom(roomId: Types.ObjectId): void;
+  addCreatedRoom(roomId: Types.ObjectId): void;
 };
 
 /**
@@ -127,6 +132,18 @@ userSchema.pre<IUser>("remove", async function (next) {
 
   next();
 });
+
+userSchema.methods.addJoinedRoom = function(roomId: Types.ObjectId) {
+  this.joinedRooms.push(roomId);
+};
+
+userSchema.methods.removeJoinedRoom = function(roomId: Types.ObjectId) {
+  this.joinedRooms = this.joinedRooms.filter((id: Types.ObjectId) => !id.equals(roomId));
+};
+
+userSchema.methods.addCreatedRoom = function(roomId: Types.ObjectId) {
+  this.createdRooms.push(roomId);
+}
 
 const User = model<IUser>("User", userSchema);
 

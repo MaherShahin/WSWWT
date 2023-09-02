@@ -1,39 +1,65 @@
-import { Request, Response, NextFunction } from 'express';
-import HttpStatusCodes from "http-status-codes";
+import { Response, NextFunction } from 'express';
+import Request from '../../types/Request';
 import { IRoom } from '../../models/Room';
-import { TRoom } from "../../models/Room";
 import { ValidationError } from '../../errors/validationError';
 
-export const validateRoomId = (req: Request, res: Response, next: NextFunction) => {
-    const roomId: string = String(req.params.roomId);
+export const validateCreateRoom = (req: Request, res: Response, next: NextFunction) => {
+  const roomData = req.body as any;
 
-    if (!roomId) {
-        throw new ValidationError('Room id is required', HttpStatusCodes.BAD_REQUEST);
-    }
+  if (!roomData || !roomData.name || !roomData.roomType || !roomData.maxParticipants) {
+    throw new ValidationError('Invalid room data');
+  }
 
-    if (!roomId.match(/^[0-9a-fA-F]{24}$/)) {
-        throw new ValidationError('Invalid room id', HttpStatusCodes.BAD_REQUEST);
-    }
+  if (roomData.roomType === 'private' && !roomData.password) {
+    throw new ValidationError('Password must be provided for a private room.');
+  }
 
-    next();
+  if (roomData.roomType !== 'private' && roomData.roomType !== 'public') {
+    throw new ValidationError('Invalid room type.');
+  }
+
+  if (roomData.maxParticipants < 1 || roomData.maxParticipants > 25) {
+    throw new ValidationError('Max participants must be greater than 0 and less than 25.');
+  }
+
+  next();
 };
 
-export const  validateRoomProperties = (room: TRoom) => {
+export const validateRoom = (room: IRoom): void => {
+  if (!room.name || room.name.length < 3 || room.name.length > 50) {
+    throw new ValidationError('Room name must be between 3 and 50 characters.');
+  }
 
-    if (room.roomType === 'private' && !room.password) {
-        throw new ValidationError('Password is required for private rooms', HttpStatusCodes.BAD_REQUEST);
-    }
+  if (!room.description || room.description.length === 0) {
+    throw new ValidationError('Description must not be empty.');
+  }
 
-    if (room.roomType !== 'private' && room.roomType !== 'public') {
-        throw new ValidationError('Invalid room type', HttpStatusCodes.BAD_REQUEST);
-    }
+  if (room.roomType === 'private' && !room.password) {
+    throw new ValidationError('Password must be provided for a private room.');
+  }
 
-    if (room.users.length > room.maxParticipants) {
-        throw new ValidationError('You cannot have more users than max participants', HttpStatusCodes.BAD_REQUEST);
-    }
+  if (!room.roomAdmin) {
+    throw new ValidationError('Invalid room admin.');
+  }
 
-    if (room.maxParticipants < 1 || room.maxParticipants > 25) {
-        throw new ValidationError('Invalid max participants, you must have at least 1 and at most 25 participants', HttpStatusCodes.BAD_REQUEST);
-    }
+  if (room.maxParticipants <= 0 || room.maxParticipants > 25) {
+    throw new ValidationError('Max participants must be greater than 0 and less than 25.');
+  }
 
-};
+  if (room.users.length > room.maxParticipants) {
+    throw new ValidationError('Max participants must be greater than number of users in room.');
+  }
+
+  if (room.users.length === 0) {
+    throw new ValidationError('Room must have at least one user.');
+  }
+
+  if (room.roomType !== 'private' && room.roomType !== 'public') {
+    throw new ValidationError('Invalid room type.');
+  }
+
+  if (room.roomType === 'public' && room.password) {
+    throw new ValidationError('Password can only be set for private rooms.');
+  }
+
+}

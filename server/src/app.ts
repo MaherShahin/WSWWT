@@ -2,9 +2,9 @@ import bodyParser from "body-parser";
 import express from "express";
 import cors from 'cors';
 import connectDB from "../config/database";
-import auth from "./routes/api/auth";
-import user from "./routes/api/user";
-// import room from "./routes/api/room";
+import authRouter from "./routes/api/auth";
+import userRouter from "./routes/api/user";
+import roomRouter from "./routes/api/room";
 import { errorMiddleware } from "./middleware/errorMiddleware";
 import Request from "./types/Request";
 import { Response,NextFunction } from "express";
@@ -29,15 +29,14 @@ app.get("/", (_req, res) => {
   res.send("API Running");
 });
 
-app.use("/api/auth", auth);
-app.use("/api/user", user);
-// app.use("/api/room", room)
+app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
+app.use("/api/room", roomRouter)
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Internal Server Error';
   res.status(statusCode).json({ errors: [{ msg: message }] });
 });
-
 
 export default app;
