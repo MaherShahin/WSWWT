@@ -1,7 +1,10 @@
 import { Response, NextFunction } from 'express';
 import Request from '../../types/Request';
-import { IRoom } from '../../models/Room';
+import Room, { IRoom } from '../../models/Room';
 import { ValidationError } from '../../errors/validationError';
+import { comparePasswords } from '../../utils/encryptionUtils';
+import { Types } from 'mongoose';
+import User, { IUser } from '../../models/User';
 
 export const validateCreateRoom = (req: Request, res: Response, next: NextFunction) => {
   const roomData = req.body as any;
@@ -62,4 +65,43 @@ export const validateRoom = (room: IRoom): void => {
     throw new ValidationError('Password can only be set for private rooms.');
   }
 
-}
+};
+
+export const validateRoomJoin = (user: IUser, room: IRoom, password?: string) => {
+
+  if (!user || !room) {
+    throw new ValidationError('User or room not found');
+  }
+
+  if (room.users.includes(user._id)) {
+    throw new ValidationError('User already in room');
+  }
+
+  if (room.maxParticipants && room.users.length >= room.maxParticipants) {
+    throw new ValidationError('Room is full');
+  }
+
+  if (room.roomType === 'private' && !password) {
+    throw new ValidationError('Room is private, you need to provide a password');
+  }
+
+  if (!comparePasswords(password, room.password)) {
+    throw new ValidationError('Incorrect password');
+  }
+
+  return { user, room };
+};
+
+export const validateRoomLeave = (user: IUser, room: IRoom) => {
+  if (!user || !room) {
+    throw new ValidationError('User or room not found');
+  }
+
+  if (!room.users.includes(user._id)) {
+    throw new ValidationError('User is not in room');
+  }
+
+  if (room.roomAdmin.equals(user._id)) {
+    throw new ValidationError('Room admin cannot leave room');
+  }
+};

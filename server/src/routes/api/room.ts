@@ -7,8 +7,8 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
-router.post('/create', validateCreateRoom, RoomController.createRoom);
 router.get('/:id', RoomController.getRoomById);
+router.post('/create', validateCreateRoom, RoomController.createRoom);
 router.post('/join/:roomId', RoomController.joinRoom);
 router.post('/leave/:roomId', RoomController.leaveRoom);
 router.delete('/delete/:roomId', RoomController.deleteRoom);

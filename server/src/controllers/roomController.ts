@@ -5,7 +5,6 @@ import { asyncHandler } from '../utils/asyncHandler';
 import { RoomService } from '../services/roomService';
 import { RoomType } from '../models/Room';
 import { RoomUserService } from '../services/roomUserService';
-import { hashPassword } from '../utils/encryptionUtils';
 
 interface RoomDto {
     name: string,
@@ -20,8 +19,7 @@ export class RoomController {
 
     static createRoom = asyncHandler(async (req: Request, res: Response) => {
         const roomData: RoomDto = req.body;
-        const roomAdmin = req.userId as unknown as Types.ObjectId;
-
+        const roomAdmin = new Types.ObjectId(req.userId);
         const newRoom = await RoomService.createRoom({ ...roomData, roomAdmin });
 
         if (!newRoom) {
@@ -49,7 +47,7 @@ export class RoomController {
     });
 
     static joinRoom =  asyncHandler(async (req: Request, res: Response) => {
-        const userId = req.userId as unknown as Types.ObjectId;
+        const userId =  new Types.ObjectId(req.userId);
         const roomId = new Types.ObjectId(req.params.roomId);
 
         const { roomPassword } = req.body;
@@ -64,7 +62,7 @@ export class RoomController {
     });
 
     static leaveRoom = asyncHandler(async (req: Request, res: Response) => {
-        const userId = req.userId as unknown as Types.ObjectId;
+        const userId = new Types.ObjectId(req.userId);
         const roomId = new Types.ObjectId(req.params.roomId);
 
         const result = await RoomUserService.leaveRoom(userId, roomId);
@@ -77,7 +75,7 @@ export class RoomController {
     });
 
     static deleteRoom = asyncHandler(async (req: Request, res: Response) => {
-        const userId = req.userId as unknown as Types.ObjectId;
+        const userId = new Types.ObjectId(req.userId);
         const roomId = new Types.ObjectId(req.params.roomId);
 
         const result = await RoomService.deleteRoom(userId, roomId);
@@ -90,7 +88,7 @@ export class RoomController {
     });
 
     static updateRoom = asyncHandler(async (req: Request, res: Response) => {
-        const userId = req.userId as unknown as Types.ObjectId;
+        const userId = new Types.ObjectId(req.userId);
         const roomId = new Types.ObjectId(req.params.roomId);
         const updates = req.body;
 

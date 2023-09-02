@@ -21,18 +21,33 @@ describe("AuthController", () => {
     expect(response.body).toHaveProperty("token");
     expect(response.body.token).toBe("mocked_jwt_token"); 
   });
-
+  
   it("should login a user successfully", async () => {
-    (AuthService.loginUser as jest.Mock).mockResolvedValue("mocked_jwt_token_for_login");
-
+    const mockUser = {
+      id: '1',
+      name: 'Test User',
+      email: 'test@test.com',
+      username: 'testusername'
+    };
+    
+    const mockLoginResponse = {
+      token: 'mocked_jwt_token_for_login',
+      user: mockUser
+    };
+  
+    (AuthService.loginUser as jest.Mock).mockResolvedValue(mockLoginResponse);
+  
     const response = await request(app)
       .post("/api/auth/login")
       .send({ email: "test@test.com", password: "testpass" });
-
+  
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("token");
-    expect(response.body.token).toBe("mocked_jwt_token_for_login");
+    expect(response.body).toHaveProperty("user");
+    expect(response.body.token).toEqual("mocked_jwt_token_for_login");
+    expect(response.body.user).toEqual(mockUser);
   });
+  
 
   it("should fail to register a user due to duplicate email", async () => {
     (AuthService.registerUser as jest.Mock).mockRejectedValue(new ValidationError("User already exists"));
