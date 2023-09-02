@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import HttpStatusCodes from "http-status-codes";
 import { IRoom } from '../../models/Room';
 import { TRoom } from "../../models/Room";
-import { ValidationError } from './ValidationError';
+import { ValidationError } from '../../errors/validationError';
 
 export const validateRoomId = (req: Request, res: Response, next: NextFunction) => {
     const roomId: string = String(req.params.roomId);

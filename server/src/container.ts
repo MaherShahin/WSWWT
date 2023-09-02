@@ -9,3 +9,4 @@ container.bind<IRoom>('Room').to(Room);
 container.bind<IUser>('User').to(User);
 
 export default container;
+

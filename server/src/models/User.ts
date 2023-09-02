@@ -1,4 +1,4 @@
-import { Document, model, Schema } from "mongoose";
+import { Document, model, Schema, Types } from "mongoose";
 import Room from "./Room";
 
 /**
@@ -20,8 +20,8 @@ export type TUser = {
   name: string;
   email: string;
   password: string;
-  createdRooms: string[];
-  joinedRooms: string[];
+  createdRooms: Types.ObjectId[];
+  joinedRooms: Types.ObjectId[];
   profilePicture: string;
   bio: string;
   dateCreated: Date;
@@ -67,11 +67,13 @@ const userSchema: Schema = new Schema({
     required: true,
   },
   createdRooms: {
-    type: [String],
+    type: [Types.ObjectId],
+    ref: 'Room', 
     default: [],
   },
   joinedRooms: {
-    type: [String],
+    type: [Types.ObjectId],
+    ref: 'Room', 
     default: [],
   },
   profilePicture: {

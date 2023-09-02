@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import Payload from "../types/Payload";
 import Request from "../types/Request";
 
-export default function(req: Request, res: Response, next: NextFunction) {
+export default function authMiddleware(req: Request, res: Response, next: NextFunction) {
   // Get token from header
   const token = req.header("x-auth-token");
 

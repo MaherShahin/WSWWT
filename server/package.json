@@ -12,7 +12,7 @@
     "server": "concurrently \"npm run watch-tsc\" \"npm run watch-deploy\"",
     "start": "npm run deploy",
     "heroku-postbuild": "npm run tsc",
-    "test": "jest --silent --watchAll --no-cache --detectOpenHandles"
+    "test": "jest --silent --no-cache --detectOpenHandles"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
