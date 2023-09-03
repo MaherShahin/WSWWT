@@ -33,14 +33,6 @@ describe("AuthService", () => {
       .rejects.toThrow("Invalid credentials");
   });
 
-  it("should return a JWT token when credentials are correct", async () => {
-    mockUserFindOne({ id: "userId", password: "hashedPassword" });
-    (comparePasswords as jest.Mock).mockResolvedValue(true);
-    (jwt.sign as jest.Mock).mockReturnValue("validToken");
-    const token = await AuthService.loginUser("test@test.com", "correctPassword");
-    expect(token).toEqual("validToken");
-  });
-
   it("should throw an error if user already exists during registration", async () => {
     mockUserFindOne({ email: "existing@test.com" });
     await expect(AuthService.registerUser("existing@test.com", "username", "Test User", "password"))

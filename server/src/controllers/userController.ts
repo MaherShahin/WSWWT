@@ -3,7 +3,6 @@ import { NextFunction, Response } from "express";
 import Request from "../types/Request";
 import { UserService } from "../services/userService";
 import { asyncHandler } from "../utils/asyncHandler";
-import { registerValidation } from "../middleware/validation/registerValidation";
 import { Types } from "mongoose";
 
 export class UserController {
@@ -22,12 +21,29 @@ export class UserController {
   });
 
   static getUserById = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const userId = new Types.ObjectId(req.params.id);
-    const user = await UserService.findUserById(userId);
-    if (user) {
+    try {
+      const userId = new Types.ObjectId(req.params.id);
+      const user = await UserService.findUserById(userId);
+      if (!user) {
+        return res.status(404).json({ errors: [{ msg: 'User not found' }] });
+      }
       res.status(200).json({ user: user.toObject() });
-    } else {
-      res.status(404).json({ message: 'User not found' });
+    } catch (err) {
+      next(err);
     }
   });
+
+  static getUserRooms = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = new Types.ObjectId(req.userId);
+      const user = await UserService.findUserById(userId);
+      if (!user) {
+        return res.status(404).json({ errors: [{ msg: 'User not found' }] });
+      }
+      const rooms = await UserService.getUserRooms(userId);
+      res.status(200).json(rooms);
+    } catch (err) {
+      next(err);
+    }
+  };
 }

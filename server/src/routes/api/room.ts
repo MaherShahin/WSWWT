@@ -5,6 +5,11 @@ import { validateCreateRoom } from '../../middleware/validation/roomValidation';
 
 const router = express.Router();
 
+router.get('/test', (req, res) => {
+    res.send('test');
+    }
+);
+
 router.use(authMiddleware);
 
 router.get('/:id', RoomController.getRoomById);

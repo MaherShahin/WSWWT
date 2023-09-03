@@ -73,4 +73,18 @@ export class UserService {
     user.addCreatedRoom(roomId);
     return user.save();
   }
+
+  static async getUserRooms(userId: Types.ObjectId) {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+
+    const joinedRooms = await user.getJoinedRooms();
+    const createdRooms = await user.getCreatedRooms();
+
+    return { joinedRooms: joinedRooms, createdRooms: createdRooms}
+  };
+
 }

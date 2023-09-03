@@ -1,6 +1,5 @@
 import config from "config";
 import { Response, NextFunction } from "express";
-import HttpStatusCodes from "http-status-codes";
 import jwt from "jsonwebtoken";
 
 import Payload from "../types/Payload";
@@ -10,17 +9,13 @@ export default function authMiddleware(req: Request, res: Response, next: NextFu
   const token = req.header("x-auth-token");
 
   if (!token) {
-    return res
-      .status(HttpStatusCodes.UNAUTHORIZED)
-      .json({ msg: "No token, authorization denied" });
+    throw new Error("No token, authorization denied");
   }
   try {
     const payload: Payload | any = jwt.verify(token, config.get("jwtSecret"));
     req.userId = payload.userId;
     next();
   } catch (err) {
-    res
-      .status(HttpStatusCodes.UNAUTHORIZED)
-      .json({ msg: "Token is not valid" });
+    throw new Error("Token is not valid");
   }
 }

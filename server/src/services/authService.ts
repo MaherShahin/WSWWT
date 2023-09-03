@@ -66,4 +66,16 @@ export class AuthService {
 
     return token;
   }
+  
+  static async refreshAccessToken(refreshToken: string): Promise<string> {
+    try {
+      const payload: Payload | any = jwt.verify(refreshToken, config.get("jwtSecret"));
+      const newAccessToken = jwt.sign({ userId: payload.userId }, config.get("jwtSecret"), {
+        expiresIn: '1h',
+      });
+      return newAccessToken;
+    } catch (err) {
+      throw new ValidationError("Invalid refresh token");
+    }
+  }
 }

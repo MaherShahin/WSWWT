@@ -1,5 +1,5 @@
 import { Document, model, Schema, Types } from "mongoose";
-import Room from "./Room";
+import Room, { TRoom } from "./Room";
 
 /**
  * Type to model the User Schema for TypeScript.
@@ -31,6 +31,8 @@ export type TUser = {
   addJoinedRoom(roomId: Types.ObjectId): void;
   removeJoinedRoom(roomId: Types.ObjectId): void;
   addCreatedRoom(roomId: Types.ObjectId): void;
+  getJoinedRooms(): Promise<TRoom[]>;
+  getCreatedRooms(): Promise<TRoom[]>;
 };
 
 /**
@@ -143,6 +145,14 @@ userSchema.methods.removeJoinedRoom = function(roomId: Types.ObjectId) {
 
 userSchema.methods.addCreatedRoom = function(roomId: Types.ObjectId) {
   this.createdRooms.push(roomId);
+}
+
+userSchema.methods.getJoinedRooms = async function() {
+  return Room.find({ _id: { $in: this.joinedRooms } });
+}
+
+userSchema.methods.getCreatedRooms = async function() {
+  return Room.find({ _id: { $in: this.createdRooms } });
 }
 
 const User = model<IUser>("User", userSchema);

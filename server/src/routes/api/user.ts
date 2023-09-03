@@ -4,8 +4,9 @@ import authMiddleware from "../../middleware/authMiddleware";
 
 const router: Router = Router();
 
+router.get("/rooms", authMiddleware, UserController.getUserRooms)
+router.get("/:id", UserController.getUserById);
 router.put("/update", authMiddleware, UserController.update);
 router.delete("/delete", authMiddleware, UserController.delete);
-router.get("/:id", UserController.getUserById);
 
 export default router;
