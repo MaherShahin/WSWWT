@@ -8,8 +8,14 @@ export const loginValidation = [
     (req: Request, res: Response, next: NextFunction) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            throw new ValidationError(errors.array().map(error => error.msg).join(", "));
+            throw new ValidationError(errors.array().map(error => {
+                return {
+                    message: error.msg,
+                    field: error.param
+                };
+            }));
         }
+        
         next();
     },
 ];

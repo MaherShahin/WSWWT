@@ -1,0 +1,21 @@
+.room-box {
+    background-color: rgb(45, 43, 43);
+    border: 1px solid rgb(133, 133, 133);
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    margin: 0.3rem;
+    width: 100%;
+}
+
+.room-box:hover {
+    background-color: rgb(133, 133, 133);
+    cursor: pointer;
+}
+
+.leave-icon:hover {
+    cursor: pointer;
+    color: rgb(149, 7, 7);
+    transform: scale(1.3);
+}

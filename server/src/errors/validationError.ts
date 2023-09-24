@@ -1,9 +1,16 @@
 import { CustomError } from "./customError";
 
-export class ValidationError extends CustomError {
-    statusCode: number;
+class ValidationError extends CustomError {
+    statusCode = 400;
 
-    constructor(message: string) {
-        super(message, 400);
+    constructor(public errors: { message: string; field?: string }[]) {
+        super('Invalid request parameters');
+        Object.setPrototypeOf(this, ValidationError.prototype);
+    }
+
+    serializeErrors() {
+        return this.errors;
     }
 }
+
+export { ValidationError };

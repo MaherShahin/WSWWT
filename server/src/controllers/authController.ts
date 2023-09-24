@@ -1,4 +1,3 @@
-// src/controllers/AuthController.ts
 import { NextFunction, Response } from "express";
 import Request from "../types/Request";
 import { AuthService } from "../services/authService";
@@ -29,7 +28,7 @@ export class AuthController {
       const userId = payload.userId;
       const user = await UserService.findUserById(userId);
       if (!user) {
-        throw new ValidationError("User not found");
+        throw new ValidationError([{ message: "User not found" }]);
       }
       res.status(200).json(user);
     } catch (err) {

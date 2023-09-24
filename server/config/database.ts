@@ -1,4 +1,5 @@
 import config from "config";
+import { DatabaseError } from "../src/errors/databaseError";
 import { connect } from "mongoose";
 
 const connectDB = async () => {
@@ -9,6 +10,7 @@ const connectDB = async () => {
     console.log("MongoDB Connected...");
   } catch (err) {
     console.error(err.message);
+    throw new DatabaseError();
     // Exit process with failure
     process.exit(1);
   }

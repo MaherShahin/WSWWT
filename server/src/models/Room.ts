@@ -16,7 +16,6 @@ export enum RoomType {
  * @param roomAdmin:string
  * @param roomType:'public' | 'private'
  * @param maxParticipants:number
- * @param criteria:string[]
  */
 
 export type TRoom = {
@@ -28,7 +27,6 @@ export type TRoom = {
   roomAdmin: Types.ObjectId;
   roomType: RoomType;
   maxParticipants: number;
-  criteria: string[];
 
   // Methods
   addUser(userId: Types.ObjectId): void;
@@ -48,7 +46,6 @@ export type TRoom = {
  * @param roomAdmin:string
  * @param roomType:'public' | 'private'
  * @param maxParticipants:number
- * @param criteria:string[]
  */
 
 export interface IRoom extends TRoom, Document { }
@@ -62,7 +59,6 @@ const roomSchema: Schema = new Schema({
   roomAdmin: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   roomType: { type: String, enum: Object.values(RoomType), required: true },
   maxParticipants: { type: Number },
-  criteria: { type: [String], default: [] },
 });
 
 
@@ -79,7 +75,6 @@ const roomSchema: Schema = new Schema({
  * @param roomAdmin:string
  * @param roomType:'public' | 'private'
  * @param maxParticipants:number
- * @param criteria:string[]
  */
 
 roomSchema.pre<IRoom>("remove", async function (next) {

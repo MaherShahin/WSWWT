@@ -20,11 +20,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 app.use(express.json());
-app.use(errorMiddleware);
 
-// @route   GET /
-// @desc    Test Base API
-// @access  Public
+
 app.get("/", (_req, res) => {
   res.send("API Running");
 });
@@ -32,11 +29,6 @@ app.get("/", (_req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/room", roomRouter);
-
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  const statusCode = err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
-  res.status(statusCode).json({ errors: [{ msg: message }] });
-});
+app.use(errorMiddleware);
 
 export default app;

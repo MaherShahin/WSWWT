@@ -16,7 +16,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new ValidationError('User could not be created');
+      throw new ValidationError([{ message: 'User could not be created' }]);
     }
 
     await user.save();
@@ -48,7 +48,12 @@ export class UserService {
   }
 
   static async findUserById(userId: Types.ObjectId): Promise<IUser | null> {
-    return User.findById(userId).select("-password").exec();
+    try {
+      return User.findById(userId).select("-password").exec();
+    } catch (err) {
+      console.log(err);
+      throw new NotFoundError('User not found');
+    }
   }
 
   static async addJoinedRoomToUser(userId: Types.ObjectId, roomId: Types.ObjectId): Promise<IUser | null> {
@@ -68,7 +73,7 @@ export class UserService {
   static async addCreatedRoomToUser(userId: Types.ObjectId, roomId: Types.ObjectId) {
     const user = await User.findById(userId);
     if (!user) {
-      throw new ValidationError('User not found');
+      throw new NotFoundError('User not found');
     }
     user.addCreatedRoom(roomId);
     return user.save();
