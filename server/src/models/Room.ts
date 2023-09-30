@@ -22,7 +22,7 @@ export type TRoom = {
   name: string;
   description: string;
   users: Types.ObjectId[];
-  currentSeries: Types.ObjectId[];
+  currentSeries: string[];
   password?: string;
   roomAdmin: Types.ObjectId;
   roomType: RoomType;
@@ -54,7 +54,7 @@ const roomSchema: Schema = new Schema({
   name: { type: String, required: true },
   description: { type: String },
   users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  currentSeries: [{ type: Schema.Types.ObjectId, ref: 'Series' }],
+  currentSeries: [{ type: String }],
   password: { type: String, required: false },
   roomAdmin: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   roomType: { type: String, enum: Object.values(RoomType), required: true },

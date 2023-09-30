@@ -17,6 +17,7 @@ const userSlice = createSlice({
       },
       createRoom: (state, action) => {
         state.createdRooms = [...state.createdRooms, action.payload];
+        state.joinedRooms = [...state.joinedRooms, action.payload];
       },
       joinRoom: (state, action) => {
         state.joinedRooms = [...state.joinedRooms, action.payload];

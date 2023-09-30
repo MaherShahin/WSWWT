@@ -1,10 +1,12 @@
 import * as React from 'react';
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, Card, CardContent, CardActions, IconButton, Typography } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useNavigate } from 'react-router-dom';
-import './RoomBox.css';
-import { authenticatedRequest } from '../../api/api';
 import ShareIcon from '@mui/icons-material/Share';
+import RoomIcon from '@mui/icons-material/Room'; // Example, replace with the actual icon
+import { useNavigate } from 'react-router-dom';
+import { authenticatedRequest } from '../../api/api';
+import './RoomBox.css';
+
 
 const RoomsBox = ({ room }) => {
 
@@ -38,28 +40,27 @@ const RoomsBox = ({ room }) => {
   }
 
   return (
-    <Stack spacing={2} direction="row" 
-      className='room-box'
-      id= {'room-box-' + room?._id} 
-      onClick={goToRoom}
-    >
-      <Box width={1 / 4} >
-        {room?.name}
-      </Box>
-      <Box width={1 / 4}>
-        {room?.users.length} / {room.maxParticipants}
-      </Box>
-      <Box width={1 / 4}>
-        {room?.roomType === 'private' ? 'Private' : 'Public'}
-      </Box>
-      <Box width={1/8}>
-        <LogoutIcon onClick={handleLeaveRoom} className='leave-icon' id='leave-icon' />
-      </Box>
-      <Box>
-        <ShareIcon onClick={handleShareIcon} className='share-icon' id='share-icon' />
-      </Box>
-    </Stack>
+    <Card elevation={3} className='room-box' onClick={goToRoom}>
+      <CardContent>
+        <Stack spacing={2} direction="row">
+          <Box flexGrow={1}>
+            <Typography variant="h6">{room?.name}</Typography>
+            <Typography color="textSecondary">{room?.users.length}/{room?.maxParticipants} Participants</Typography>
+            <Typography color="textSecondary">{room?.roomType === 'private' ? 'Private' : 'Public'}</Typography>
+          </Box>
+        </Stack>
+      </CardContent>
+      <CardActions disableSpacing>
+        <IconButton aria-label="leave" onClick={handleLeaveRoom}>
+          <LogoutIcon />
+        </IconButton>
+        <IconButton aria-label="share" onClick={handleShareIcon}>
+          <ShareIcon />
+        </IconButton>
+      </CardActions>
+    </Card>
   );
 };
+
 
 export default RoomsBox;

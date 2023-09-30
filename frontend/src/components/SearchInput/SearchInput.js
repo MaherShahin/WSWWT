@@ -7,7 +7,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { addSeries } from '../../redux/series/seriesSlice';
 
 const SearchInput = (props) => {
-  const [title, setTitle] = useState<('');
+  const [title, setTitle] = useState('');
   const dispatch = useDispatch();
 
   const handleSeriesAddition = (value, imageUrl) => {

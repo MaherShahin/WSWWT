@@ -21,11 +21,13 @@ import { logoutUser } from '../../redux/user/userSlice';
 
 const pages = [
   { name: 'Home', href: '/' },
-  { name: 'Room', href: '/room' }
+  { name: 'Rooms', href: '/room' }
 ];
 
 const settings = [
   { name: 'Profile', href: '/profile' },
+  { name: 'Settings', href: '/settings'},
+  { name: 'Notifications', href: '/notifications'},
   { name: 'Logout', href: '/' },
 ];
 

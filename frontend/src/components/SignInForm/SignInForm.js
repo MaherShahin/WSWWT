@@ -12,17 +12,12 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { loginUser } from '../../redux/user/userSlice';
 import { useApi } from '../../hooks/useApi';
-import { loginUser, loginUserAndFetchRooms } from '../../redux/user/userSlice';
-import { toast } from 'react-toastify';
-import { setRooms } from '../../redux/room/roomSlice';
-import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
-import { RootState } from '../../redux/store';
 
-const SignInForm= () => {
+const SignInForm = () => {
 
-    const SIGN_IN_ENDPOINT  = '/auth/login';
-    const ROOMS_API_ENDPOINT = '/user/rooms';
+    const SIGN_IN_ENDPOINT = '/auth/login';
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -54,7 +49,18 @@ const SignInForm= () => {
 
         if (!validateForm()) return;
 
-        (dispatch)(loginUserAndFetchRooms({ email, password }));
+        const user = {
+            email,
+            password,
+        };
+
+        const response = await request({
+            method: 'post',
+            url: SIGN_IN_ENDPOINT,
+            data: user,
+        });
+
+        dispatch(loginUser(response.data));
 
         navigate('/');
     };
