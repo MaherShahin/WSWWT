@@ -1,8 +1,7 @@
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { RootState } from '../redux/store';
 
 const api = axios.create({
     baseURL: 'http://localhost:5000/api',

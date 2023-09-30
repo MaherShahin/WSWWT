@@ -11,22 +11,21 @@ const userSlice = createSlice({
     name: 'rooms',
     initialState,
     reducers: {
-        'setRooms': (state, action) => {
-            state.joinedRooms = action.payload.joinedRooms;
-            state.createdRooms = action.payload.createdRooms;
-        },
-        'createRoom': (state, action) => {
-            state.createdRooms.push(action.payload);
-        },
-        'joinRoom': (state, action) => {
-            state.joinedRooms.push(action.payload);
-        },
-        'leaveRoom': (state, action) => {
-            state.joinedRooms = state.joinedRooms.filter((room) => room?._id !== action.payload?._id);
-        },
-    }
-});
-
+      setRooms: (state, action) => {
+        state.joinedRooms = [...action.payload.joinedRooms];
+        state.createdRooms = [...action.payload.createdRooms];
+      },
+      createRoom: (state, action) => {
+        state.createdRooms = [...state.createdRooms, action.payload];
+      },
+      joinRoom: (state, action) => {
+        state.joinedRooms = [...state.joinedRooms, action.payload];
+      },
+      leaveRoom: (state, action) => {
+        state.joinedRooms = state.joinedRooms.filter((room) => room?._id !== action.payload?._id);
+      },
+    },
+  });
 
 export const { setRooms, createRoom, joinRoom, leaveRoom } = userSlice.actions;
 
