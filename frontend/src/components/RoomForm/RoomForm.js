@@ -22,11 +22,11 @@ const RoomForm = () => {
     const [maxParticipants, setMaxParticipants] = useState(1);
 
     const [errors, setErrors] = useState({});
-    
+
     const { request } = useApi();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    
+
     const validateForm = () => {
         const newErrors = {};
 
@@ -87,85 +87,78 @@ const RoomForm = () => {
 
     return (
         <>
-            <Grid
-                display={'flex'}
-                justifyContent={'center'}
-                alignItems={'center'}
-                minHeight={'100vh'}
-            >
-                <Stack spacing={2} direction="column" marginTop={3} width={1 / 2}>
-                    <Typography variant="h4" gutterBottom color="textPrimary">
-                        Create a new Room!
-                    </Typography>
-                    <FormControl>
-                        <FormLabel component="legend">Room Name</FormLabel>
-                        <TextField id="roomName"
-                            value={roomName}
-                            onChange={(e) => setRoomName(e.target.value)}
-                            error={errors.roomName ? true : false}
-                            helperText={errors.roomName}
-                        />
+            <Stack spacing={2} direction="column" marginTop={3} alignContent={'center'}>
+                <Typography variant="h4" gutterBottom color="textPrimary">
+                    Create a new Room!
+                </Typography>
+                <FormControl>
+                    <FormLabel component="legend">Room Name</FormLabel>
+                    <TextField id="roomName"
+                        value={roomName}
+                        onChange={(e) => setRoomName(e.target.value)}
+                        error={errors.roomName ? true : false}
+                        helperText={errors.roomName}
+                    />
 
-                    </FormControl>
-                    <FormControl>
-                        <FormLabel component="legend">Description</FormLabel>
-                        <TextField id="description"
-                            type='text'
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            error={errors.description ? true : false}
-                            helperText={errors.description}
-                        />
+                </FormControl>
+                <FormControl>
+                    <FormLabel component="legend">Description</FormLabel>
+                    <TextField id="description"
+                        type='text'
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        error={errors.description ? true : false}
+                        helperText={errors.description}
+                    />
 
-                    </FormControl>
-                    <FormGroup>
-                        <FormLabel component="legend">Room Type</FormLabel>
-                        <FormControlLabel required control={
-                            <Switch
-                                value={roomType.valueOf()}
-                                onChange={(e) => setRoomType(e.target.checked ? RoomType.PRIVATE : RoomType.PUBLIC)}
-                            />}
-                            label={roomType} />
-                    </FormGroup>
-                    <FormGroup>
-                        {roomType === RoomType.PRIVATE ? (
-                            <FormControl>
-                                <FormLabel component="legend">Password</FormLabel>
-                                <TextField id="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    error={errors.password ? true : false}
-                                    helperText={errors.password}
-                                />
+                </FormControl>
+                <FormGroup>
+                    <FormLabel component="legend">Room Type</FormLabel>
+                    <FormControlLabel required control={
+                        <Switch
+                            value={roomType.valueOf()}
+                            onChange={(e) => setRoomType(e.target.checked ? RoomType.PRIVATE : RoomType.PUBLIC)}
+                        />}
+                        label={roomType} />
+                </FormGroup>
+                <FormGroup>
+                    {roomType === RoomType.PRIVATE ? (
+                        <FormControl>
+                            <FormLabel component="legend">Password</FormLabel>
+                            <TextField id="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                error={errors.password ? true : false}
+                                helperText={errors.password}
+                            />
 
-                            </FormControl>
-                        ) : null
-                        }
-                    </FormGroup>
-                    <FormControl>
-                        <FormLabel component="legend">Max Participants</FormLabel>
-                        <TextField
-                            id="maxParticipants"
-                            type="number"
-                            InputProps={{
-                                inputProps: {
-                                    min: 1,
-                                    max: 25
-                                }
-                            }}
-                            value={maxParticipants}
-                            onChange={(e) => setMaxParticipants
-                                (Number(e.target.value))}
-                            error={errors.maxParticipants ? true : false}
-                            helperText={errors.maxParticipants}
-                        />
-                    </FormControl>
+                        </FormControl>
+                    ) : null
+                    }
+                </FormGroup>
+                <FormControl>
+                    <FormLabel component="legend">Max Participants</FormLabel>
+                    <TextField
+                        id="maxParticipants"
+                        type="number"
+                        InputProps={{
+                            inputProps: {
+                                min: 1,
+                                max: 25
+                            }
+                        }}
+                        value={maxParticipants}
+                        onChange={(e) => setMaxParticipants
+                            (Number(e.target.value))}
+                        error={errors.maxParticipants ? true : false}
+                        helperText={errors.maxParticipants}
+                    />
+                </FormControl>
 
-                    <Button variant="contained" color="primary" onClick={handleSubmit}>
-                        Create
-                    </Button>
-                </Stack>
-            </Grid>
+                <Button variant="contained" color="primary" onClick={handleSubmit}>
+                    Create
+                </Button>
+            </Stack>
         </>
     );
 
