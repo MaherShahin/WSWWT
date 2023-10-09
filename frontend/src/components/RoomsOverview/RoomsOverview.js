@@ -11,6 +11,7 @@ import { useApi } from '../../hooks/useApi';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import RoomsAccordion from '../RoomsAccordion/RoomsAccordion';
+import CreateRoomModal from '../CreateRoomModal/CreateRoomModal';
 
 
 const RoomsOverview = () => {
@@ -22,25 +23,24 @@ const RoomsOverview = () => {
     const { request } = useApi();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    
+
     useEffect(() => {
         const fetchRooms = async () => {
             const response = await request({
                 method: 'get',
                 url: ROOMS_API_ENDPOINT,
             });
+
             if (response.status === 200) {
                 const rooms = response.data.rooms;
-                console.log(rooms);
-                dispatch(setRooms(rooms));
+                if (JSON.stringify(rooms) !== JSON.stringify({ joinedRooms, createdRooms })) {
+                    dispatch(setRooms(rooms));
+                }
             }
-        }
-        fetchRooms();
-    }, []);
+        };
 
-    const handleCreateRoom = () => {
-        navigate('/create-room');
-    };
+        fetchRooms();
+    }, []); 
 
     const handleJoinRoom = () => {
         return;
@@ -50,11 +50,7 @@ const RoomsOverview = () => {
         <Stack spacing={2} direction="column" marginTop={3} >
             <Box display={'flex'} padding={3}>
                 <Box>
-                    <Tooltip title="Create a New Room">
-                        <IconButton color="primary" onClick={handleCreateRoom}>
-                            <AddCircleOutlineIcon fontSize="large" />
-                        </IconButton>
-                    </Tooltip>
+                    <CreateRoomModal />
                     <Tooltip title="Join a Room">
                         <IconButton color="secondary" onClick={handleJoinRoom}>
                             <GroupAddIcon fontSize="large" />

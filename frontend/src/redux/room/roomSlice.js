@@ -24,11 +24,15 @@ const userSlice = createSlice({
       },
       leaveRoom: (state, action) => {
         state.joinedRooms = state.joinedRooms.filter((room) => room?._id !== action.payload?._id);
+        state.createdRooms = state.createdRooms.filter((room) => room?._id !== action.payload?._id);
+      },
+      setCurrentRoom: (state, action) => {
+        state.currentRoom = action.payload;
       },
     },
   });
 
-export const { setRooms, createRoom, joinRoom, leaveRoom } = userSlice.actions;
+export const { setRooms, createRoom, joinRoom, leaveRoom, setCurrentRoom } = userSlice.actions;
 
 
 export default userSlice.reducer;
