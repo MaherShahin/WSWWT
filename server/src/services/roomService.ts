@@ -36,7 +36,7 @@ export class RoomService {
   }
 
   static async findRoomById(roomId: Types.ObjectId): Promise<IRoom | null> {
-    return Room.findById(roomId).exec();
+    return Room.findById(roomId).populate('users', 'name profilePicture').exec();
   }
 
   static async updateRoom(userId: Types.ObjectId, roomId: Types.ObjectId, updates: Partial<IRoom>): Promise<IRoom | null> {

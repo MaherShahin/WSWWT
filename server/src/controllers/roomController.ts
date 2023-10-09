@@ -58,12 +58,11 @@ export class RoomController {
     static joinRoom = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
         const userId = new Types.ObjectId(req.userId);
         const roomId = new Types.ObjectId(req.params.roomId);
+        const { password } = req.body;
 
-        const { roomPassword } = req.body;
+        const result = await RoomUserService.joinRoom(userId, roomId, password);
 
-        const result = await RoomUserService.joinRoom(userId, roomId, roomPassword);
-
-        if (!result) {
+        if (!result) { 
             throw new ValidationError([{ message: 'Could not join room' }]);
         }
 
