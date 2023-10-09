@@ -70,7 +70,6 @@ const Room = () => {
     }, [currentRoom]);
 
 
-
     return (
         <Container>
             <Typography variant="h4" align="justify-left" paddingTop={3} gutterBottom>

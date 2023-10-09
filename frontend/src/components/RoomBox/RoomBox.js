@@ -7,6 +7,7 @@ import './RoomBox.css';
 import { useApi } from '../../hooks/useApi';
 import { useDispatch } from 'react-redux';
 import { leaveRoom } from '../../redux/room/roomSlice';
+import RoomInvitationModal from '../RoomInvitationModal/RoomInvitationModal';
 
 
 const RoomsBox = ({ room }) => {
@@ -50,11 +51,6 @@ const RoomsBox = ({ room }) => {
     }
   };
 
-  const handleShareIcon = (e) => {
-    e.stopPropagation();
-    navigator.clipboard.writeText(window.location.href.concat(`room/${room?._id}`));
-  }
-
   return (
     <Card elevation={3} className='room-box' onClick={goToRoom}>
       <CardContent>
@@ -70,9 +66,7 @@ const RoomsBox = ({ room }) => {
         <IconButton aria-label="leave" onClick={handleLeaveRoom}>
           <LogoutIcon />
         </IconButton>
-        <IconButton aria-label="share" onClick={handleShareIcon}>
-          <ShareIcon />
-        </IconButton>
+        <RoomInvitationModal roomId={room?._id} />
       </CardActions>
     </Card>
   );

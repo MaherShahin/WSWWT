@@ -9,8 +9,14 @@ const RoomInvitationModal = ({ roomId }) => {
     const [copied, setCopied] = useState(false);
     const textAreaRef = useRef(null);
 
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleOpen = (e) =>{
+        e.stopPropagation();
+        setOpen(true);
+    } 
+    const handleClose = (e) => {
+        e.stopPropagation();
+        setOpen(false);
+    }
 
     const joinLink = window.location.origin + '/join-room/' + roomId;
 
