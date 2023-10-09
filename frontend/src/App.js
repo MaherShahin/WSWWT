@@ -19,6 +19,7 @@ import axios from 'axios';
 import { loginUser } from './redux/user/userSlice';
 import CreateRoomPage from './pages/CreateRoomPage';
 import { ToastContainer } from 'react-toastify';
+import JoinRoomPage from './pages/JoinRoomPage';
 
 const darkTheme = createTheme({
   palette: {
@@ -60,10 +61,11 @@ const App = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<SignInPage />} />
             <Route path="/register" element={<SignUpPage />} />
-            <Route path="/room" element={<RoomPage />} />
+            <Route path="/room/:id" element={<RoomPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<NotFoundPage />} />
             <Route path="/create-room" element={<CreateRoomPage />} />
+            <Route path="/join-room/:roomId" element={<JoinRoomPage />} />
           </Routes>
         </Router>
       </Container>
