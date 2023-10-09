@@ -1,10 +1,6 @@
 import React from 'react';
-import { Box, Button, Stack, Tooltip, IconButton } from '@mui/material';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { Box, Stack, Tooltip, IconButton } from '@mui/material';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import NotificationImportantIcon from '@mui/icons-material/NotificationImportant';
-import SettingsIcon from '@mui/icons-material/Settings';
-import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { setRooms } from '../../redux/room/roomSlice';
 import { useApi } from '../../hooks/useApi';
@@ -22,7 +18,6 @@ const RoomsOverview = () => {
 
     const { request } = useApi();
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchRooms = async () => {
