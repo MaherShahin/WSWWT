@@ -5,24 +5,14 @@ const api = axios.create({
     baseURL: 'http://localhost:5000/api',
 });
 
-function isValidationErrorResponse(data) {
-    return Array.isArray(data.errors) && typeof data.errors[0]?.msg === 'string';
-}
-
-function isGenericErrorResponse(data) {
-    return typeof data.message === 'string';
-}
-
 api.interceptors.response.use(undefined, (error) => {
     if (error.response) {
         const errorData = error.response.data;
 
         switch (error.response.status) {
             case 400:
-                if (isValidationErrorResponse(errorData)) {
-                    toast.error(errorData.errors[0].msg);
-                } else if (isGenericErrorResponse(errorData)) {
-                    toast.error(errorData.message);
+                if (errorData.errors[0].message) {
+                    toast.error(errorData.errors[0].message);
                 } else {
                     toast.error('Bad request error.');
                 }
