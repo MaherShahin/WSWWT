@@ -32,7 +32,7 @@ const SignUpForm= () => {
         }
         if (!password) {
             newErrors.password = 'Password cannot be empty.';
-        } else if (password.length < 8) {
+        } else if (password.length < 6) {
             newErrors.password = 'Password must be at least 8 characters long.';
         }
         if (!name) newErrors.name = 'Name cannot be empty.';

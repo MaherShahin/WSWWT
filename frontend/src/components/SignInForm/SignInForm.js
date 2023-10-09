@@ -62,7 +62,10 @@ const SignInForm = () => {
 
         dispatch(loginUser(response.data));
 
-        navigate('/');
+        const redirectURL = sessionStorage.getItem('redirectAfterLogin') || '/';
+        sessionStorage.removeItem('redirectAfterLogin');   
+
+        navigate(redirectURL);
     };
 
     return (
