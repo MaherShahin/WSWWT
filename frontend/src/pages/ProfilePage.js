@@ -12,14 +12,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { authenticatedRequest } from '../api/api';
 import { updateUser } from '../redux/user/userSlice';
+import { useApi } from '../hooks/useApi';
 
 const ProfilePage = () => {
 
     const user = useSelector((state) => state.user?.user);
     const [updatedUser, setUpdatedUser] = useState(user || null);
-
+    
+    const { request } = useApi();
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -33,7 +34,7 @@ const ProfilePage = () => {
         event.preventDefault();
 
         try {
-            const response = await authenticatedRequest('put', '/user/update', updatedUser);
+            const response = await request('put', '/user/update', updatedUser);
             console.log(response.data);
             const user = response.data;
             dispatch(updateUser(user));
