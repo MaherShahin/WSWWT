@@ -3,7 +3,8 @@ import { CustomError } from "../errors/customError";
 
 export function errorMiddleware(err: any, req: Request, res: Response, next: NextFunction) {
     if (err instanceof CustomError) {
-        return res.status(err.statusCode).json({ errors: [{ msg: err.message }] });
+        console.log(err);
+        return res.status(err.statusCode).json({ errors: err.serializeErrors() });
     }
 
     console.error(err);

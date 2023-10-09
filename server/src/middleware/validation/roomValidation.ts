@@ -67,25 +67,25 @@ export const validateRoom = (room: IRoom): void => {
 
 export const validateRoomJoin = (user: IUser, room: IRoom, password?: string) => {
 
-  // if (!user || !room) {
-  //   throw new ValidationError('User or room not found');
-  // }
+  if (!user || !room) {
+    throw new ValidationError([{ message: 'User or room not found' }]);
+  }
 
-  // if (room.users.includes(user._id)) {
-  //   throw new ValidationError('User already in room');
-  // }
+  if (room.users.includes(user._id)) {
+    throw new ValidationError([{ message: 'User already in room' }]);
+  }
 
-  // if (room.maxParticipants && room.users.length >= room.maxParticipants) {
-  //   throw new ValidationError('Room is full');
-  // }
+  if (room.users.length >= room.maxParticipants) {
+    throw new ValidationError([{ message: 'Room is full' }]);
+  }
 
-  // if (room.roomType === 'private' && !password) {
-  //   throw new ValidationError('Room is private, you need to provide a password');
-  // }
+  if (room.roomType === 'private' && !password) {
+    throw new ValidationError([{ message: 'Room is private, you need to provide a password' }]);
+  }
 
-  // if (!comparePasswords(password, room.password)) {
-  //   throw new ValidationError('Incorrect password');
-  // }
+  if (!comparePasswords(password, room.password)) {
+    throw new ValidationError([{ message: 'Incorrect password' }]);
+  }
 
   return { user, room };
 };

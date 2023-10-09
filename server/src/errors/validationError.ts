@@ -4,9 +4,11 @@ class ValidationError extends CustomError {
     statusCode = 400;
 
     constructor(public errors: { message: string; field?: string }[]) {
-        super('Invalid request parameters');
+        super();
+        this.errors = errors;
         Object.setPrototypeOf(this, ValidationError.prototype);
     }
+
 
     serializeErrors() {
         return this.errors;
