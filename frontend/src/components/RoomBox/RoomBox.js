@@ -2,17 +2,20 @@ import * as React from 'react';
 import { Box, Stack, Card, CardContent, CardActions, IconButton, Typography } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ShareIcon from '@mui/icons-material/Share';
-import RoomIcon from '@mui/icons-material/Room'; // Example, replace with the actual icon
 import { useNavigate } from 'react-router-dom';
-import { authenticatedRequest } from '../../api/api';
 import './RoomBox.css';
+import { useApi } from '../../hooks/useApi';
+import { useDispatch } from 'react-redux';
+import { leaveRoom } from '../../redux/room/roomSlice';
 
 
 const RoomsBox = ({ room }) => {
 
-  const LEAVE_ROOM_API_ENDPOINT = '/room/leave';
+  const LEAVE_ROOM_API_ENDPOINT = '/room/leave/';
 
   const navigate = useNavigate(); 
+  const {request } = useApi();
+  const dispatch = useDispatch();
 
   const goToRoom = () => {
     navigate(`/room/${room?._id}`);
@@ -21,13 +24,26 @@ const RoomsBox = ({ room }) => {
 
   const handleLeaveRoom = async (e) => {
     e.stopPropagation();
+
+    // show confirmation dialog
+    if (!window.confirm('Are you sure you want to leave' + room?.name + '?')) {
+      return;
+    }
+
     try {
-      const response = await authenticatedRequest('post', LEAVE_ROOM_API_ENDPOINT.concat(`/${room?._id}`));
+
+        const response = await request({
+          method: 'POST',
+          url: LEAVE_ROOM_API_ENDPOINT + room?._id,
+      });
+
       if (response.status === 200) {
         console.log('Successfully left room');
       } else {
         console.log('Failed to leave room');
       }
+
+      dispatch(leaveRoom(room));
       console.log(response.data);
     } catch (error) {
       console.error(error);
