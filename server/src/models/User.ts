@@ -22,6 +22,7 @@ export type TUser = {
   password: string;
   createdRooms: Types.ObjectId[];
   joinedRooms: Types.ObjectId[];
+  friends: Types.ObjectId[];
   profilePicture: string;
   bio: string;
   dateCreated: Date;
@@ -46,6 +47,7 @@ export type TUser = {
  * @param password:string
  * @param createdRooms:string[]
  * @param joinedRooms:string[]
+ * @param friends: string[]
  * @param profilePicture:string
  * @param bio:string
  * @param dateCreated:Date
@@ -83,6 +85,11 @@ const userSchema: Schema = new Schema({
     ref: 'Room', 
     default: [],
   },
+  friends: {
+    type: [Types.ObjectId],
+    ref: 'User', 
+    default: [],
+  },
   profilePicture: {
     type: String,
     default: "",
@@ -111,6 +118,7 @@ const userSchema: Schema = new Schema({
  * @param password:string
  * @param createdRooms:string[]
  * @param joinedRooms:string[]
+ * @param friends: string[]
  * @param profilePicture:string
  * @param bio:string
  * @param dateCreated:Date

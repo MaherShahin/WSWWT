@@ -26,8 +26,10 @@ export class UserController {
   });
 
   static getUserById = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const userId = new Types.ObjectId(req.params.id);
+    const userId = new Types.ObjectId(req.userId);
     const user = await UserService.findUserById(userId);
+
+    console.log(userId);
     
     if (!user) {
       throw new NotFoundError();
@@ -46,6 +48,56 @@ export class UserController {
     
     const rooms = await UserService.getUserRooms(userId);
     res.status(200).json({'rooms': rooms});
+  });
+
+  static addFriend = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const userId = new Types.ObjectId(req.userId);
+    const friendId = new Types.ObjectId(req.body.friendId);
+
+    console.log(userId);
+    console.log(friendId);
+
+    const user = await UserService.addFriend(userId, friendId);
+    
+    if (!user) {
+      throw new NotFoundError();
+    }
+
+    res.status(200).json({ user: user.toObject() });
+  });  
+
+  static removeFriend = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const userId = new Types.ObjectId(req.userId);
+    const friendId = new Types.ObjectId(req.params.friendId);
+    const user = await UserService.removeFriend(userId, friendId);
+    
+    if (!user) {
+      throw new NotFoundError();
+    }
+
+    res.status(200).json({ user: user.toObject() });
+  });
+
+  static searchUsers = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const userId = new Types.ObjectId(req.userId);
+    const query = String(req.query.q).trim();
+  
+    let users = [];
+  
+    if (Types.ObjectId.isValid(query)) {
+      const searchUserId = new Types.ObjectId(query);
+      const userById = await UserService.findUserById(searchUserId);
+      if (userById && userById._id.toString() !== userId.toString()) {
+        users.push(userById);
+      }
+    }
+  
+    const usersByName = await UserService.findUsersByName(query);
+    const filteredUsers = usersByName.filter(u => 
+      u._id.toString() !== userId.toString()
+    );
+  
+    res.json([...users, ...filteredUsers]);
   });
 
 }

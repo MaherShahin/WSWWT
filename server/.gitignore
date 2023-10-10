@@ -3,4 +3,5 @@ dist
 package-lock.json
 config/default.json
 /config/default.json
-```
+config/default.json
+config
