@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { createRoom } from '../../redux/room/roomSlice';
 
-const RoomForm = () => {
+const CreateRoomForm = () => {
 
     const RoomType = {
         PUBLIC: 'public',
@@ -62,27 +62,29 @@ const RoomForm = () => {
             name: roomName,
             description: description,
             roomType: roomType,
-            maxParticipants: maxParticipants
+            maxParticipants: maxParticipants,
+            password: password ? password : null
         };
 
-        if (roomType === RoomType.PRIVATE) {
-            roomData.password = password;
+        try {
+            const response = await request({
+                method: 'post',
+                url: CREATE_ROOM_API_ENDPOINT,
+                data: roomData
+            });
+    
+            if (!response) return;
+    
+            if (response.status === 200) {
+                console.log('response', response);
+                const room = response.data;
+                dispatch(createRoom(room));
+                navigate('/room/' + response.data._id);
+            }
+        } catch (error) {
+            console.log(error);
         }
-
-        const response = await request({
-            method: 'post',
-            url: CREATE_ROOM_API_ENDPOINT,
-            data: roomData
-        });
-
-        if (!response) return;
-
-        if (response.status === 200) {
-            console.log('response', response);
-            const room = response.data;
-            dispatch(createRoom(room));
-            navigate('/room/' + response.data._id);
-        }
+        
     }
 
     return (
@@ -165,4 +167,4 @@ const RoomForm = () => {
 
 }
 
-export default RoomForm;
+export default CreateRoomForm;

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import RoomForm from '../RoomForm/RoomForm';
+import CreateRoomForm from '../CreateRoomForm/CreateRoomForm';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import  { IconButton, Tooltip } from '@mui/material';   
 
 
-const RoomModal = () => {
+const CreateRoomModal = () => {
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => setOpen(true);
@@ -39,11 +39,11 @@ const RoomModal = () => {
                         p: 4,
                     }}
                 >
-                    <RoomForm />
+                    <CreateRoomForm />
                 </Box>
             </Modal>
         </>
     );
 }
 
-export default RoomModal;
+export default CreateRoomModal;

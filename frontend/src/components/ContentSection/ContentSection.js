@@ -12,7 +12,6 @@ const ContentSection = ({ contentItems }) => {
                             <Typography variant="h6">
                                 {item.title}
                             </Typography>
-                            {/* Add more content details as needed */}
                         </CardContent>
                     </Card>
                 </Grid>

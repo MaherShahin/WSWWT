@@ -27,37 +27,46 @@ const SignUpForm= () => {
         const newErrors = {};
 
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
         if (!emailRegex.test(email)) {
           newErrors.email = 'Invalid email address';
         }
+
         if (!password) {
             newErrors.password = 'Password cannot be empty.';
         } else if (password.length < 6) {
             newErrors.password = 'Password must be at least 8 characters long.';
         }
+
         if (!name) newErrors.name = 'Name cannot be empty.';
+
         if (!username) newErrors.username = 'Username cannot be empty.';
 
         setErrors(newErrors);
-        return !Object.values(newErrors).some((error) => error !== null);
+        return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
         if (!validateForm()) return;
+
         setLoading(true);
+        try {
+            await request({
+                method: 'post',
+                url: SIGN_UP_ENDPOINT,
+                data: { email, password, name, username }
+            });
 
-        await request({
-            method: 'post',
-            url: SIGN_UP_ENDPOINT,
-            data: { email, password, name, username }
-        });
-
-        toast.success('Successfully registered!');
-        setTimeout(() => {
-            navigate('/login');
-        }, 2000);
-
+            toast.success('Successfully registered!');
+            setTimeout(() => {
+                navigate('/login');
+            }, 2000);
+        } catch (error) {
+            console.log(error);
+            toast.error(error.response.data.errors[0].msg);
+        }
         setLoading(false);
     };
 

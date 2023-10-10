@@ -18,8 +18,8 @@ const Room = () => {
 
     const [users, setUsers] = useState([]);
     const { request } = useApi();  
-    const [contentItems, setContentItems] = useState([]);  // New state for content items
-    const [roomName, setRoomName] = useState('');  // New state for room name
+    const [contentItems, setContentItems] = useState([]);
+    const [roomName, setRoomName] = useState('');
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -29,15 +29,6 @@ const Room = () => {
                 method: 'GET',
                 url: ROOM_API_ENDPOINT,
             });
-
-            if (!response) {
-                console.log('No response');
-                return;
-            }
-            if (response.status !== 200) {
-                console.log('Error!');
-                return;
-            }
 
             let room = response.data;
             dispatch(setCurrentRoom(room));

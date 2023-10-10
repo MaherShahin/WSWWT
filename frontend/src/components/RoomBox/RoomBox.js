@@ -26,13 +26,11 @@ const RoomsBox = ({ room }) => {
   const handleLeaveRoom = async (e) => {
     e.stopPropagation();
 
-    // show confirmation dialog
     if (!window.confirm('Are you sure you want to leave' + room?.name + '?')) {
       return;
     }
 
     try {
-
         const response = await request({
           method: 'POST',
           url: LEAVE_ROOM_API_ENDPOINT + room?._id,

@@ -16,13 +16,8 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
-import { RootState } from '../../redux/store';
 import { logoutUser } from '../../redux/user/userSlice';
 
-const pages = [
-  { name: 'Home', href: '/' },
-  { name: 'Rooms', href: '/room' }
-];
 
 const settings = [
   { name: 'Profile', href: '/profile' },
@@ -116,25 +111,9 @@ const ResponsiveAppBar = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page.name} onClick={handleCloseNavMenu} component={Link} to={page.href}>
-                  <Typography textAlign="center">{page.name}</Typography>
-                </MenuItem>
-              ))}
             </Menu>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page.name}
-                onClick={handleCloseNavMenu}
-                component={Link}
-                to={page.href}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page.name}
-              </Button>
-            ))}
           </Box>
 
           {user ? (

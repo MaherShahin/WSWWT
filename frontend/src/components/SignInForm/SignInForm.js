@@ -54,18 +54,24 @@ const SignInForm = () => {
             password,
         };
 
-        const response = await request({
-            method: 'post',
-            url: SIGN_IN_ENDPOINT,
-            data: user,
-        });
+        try {
+            const response = await request({
+                method: 'post',
+                url: SIGN_IN_ENDPOINT,
+                data: user,
+            });
+    
+            dispatch(loginUser(response.data));
+    
+            const redirectURL = sessionStorage.getItem('redirectAfterLogin') || '/';
+            sessionStorage.removeItem('redirectAfterLogin');   
+    
+            navigate(redirectURL);
+        } catch (error) {
+            console.log(error);
+            setErrors({ password: error.response.data.errors[0].msg });
+        }
 
-        dispatch(loginUser(response.data));
-
-        const redirectURL = sessionStorage.getItem('redirectAfterLogin') || '/';
-        sessionStorage.removeItem('redirectAfterLogin');   
-
-        navigate(redirectURL);
     };
 
     return (
@@ -90,7 +96,7 @@ const SignInForm = () => {
                         autoFocus
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        error={!!errors.email}
+                        error={errors.email}
                         helperText={errors.email}
                     />
                     <TextField
@@ -104,7 +110,7 @@ const SignInForm = () => {
                         autoComplete="current-password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        error={!!errors.password}
+                        error={errors.password}
                         helperText={errors.password}
                     />
                     <FormControlLabel

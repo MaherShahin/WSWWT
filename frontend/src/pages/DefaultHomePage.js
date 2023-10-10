@@ -3,7 +3,7 @@ import { Button, Typography, Box, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 
-const Hero = styled(Box)(({ theme }) => ({
+const Hero = styled(Box)(() => ({
   height: '90vh',
   display: 'flex',
   flexDirection: 'column',
@@ -31,7 +31,6 @@ const DefaultHomePage = () => {
           >
               Login
           </Button>
-
           <Button 
               variant="contained" 
               color="secondary" 

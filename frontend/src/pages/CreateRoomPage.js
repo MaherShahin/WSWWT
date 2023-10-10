@@ -1,12 +1,12 @@
 import React, {  } from 'react';
-import RoomForm from '../components/RoomForm/RoomForm';
+import CreateRoomForm from '../components/CreateRoomForm/CreateRoomForm';
 import { ToastContainer } from 'react-toastify';
 
 const CreateRoomPage = () => {
 
   return (
     <>
-      <RoomForm />
+      <CreateRoomForm />
     </>
   );
 };
