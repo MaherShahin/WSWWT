@@ -3,21 +3,30 @@ import { IconButton, Tooltip, TextField, Button, List, ListItem, ListItemText, L
 import { InsertEmoticonOutlined } from '@mui/icons-material';
 import { useApi } from '../../hooks/useApi';
 import Modal from '@mui/material/Modal';
-
-const USER_SEARCH_ENDPOINT = '/user/search';
+import { useSelector } from 'react-redux';
+import { addFriend } from '../../redux/user/userSlice';
+import { useDispatch } from 'react-redux';
 
 const UserSearchModal = () => {
+
+    const USER_SEARCH_ENDPOINT = '/user/search';
+    const USER_FRIEND_REQUEST_ENDPOINT = '/user/addFriend';
+
+    const userFriends = useSelector(state => state.user?.user.friends);
+
     const [open, setOpen] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [addFriendLoading, setAddFriendLoading] = useState(false);
 
     const { request } = useApi();
+    const dispatch = useDispatch();
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
     const handleSearch = async (query) => {
-        setLoading(true)
+        setLoading(true);
         try {
             const res = await request({
                 method: 'GET',
@@ -32,6 +41,24 @@ const UserSearchModal = () => {
 
     const sendFriendRequest = async (friendId) => {
         console.log('sending friend request to', friendId);
+        setAddFriendLoading(true);
+        try {
+            const res = await request({
+                method: 'POST',
+                url: USER_FRIEND_REQUEST_ENDPOINT,
+                data: {
+                    friendId,
+                },
+            });
+            
+            if (res.data.success) {
+                dispatch(addFriend(friendId))
+                console.log(res.data);    
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        setAddFriendLoading(false);
         return;
     };
 
@@ -63,16 +90,21 @@ const UserSearchModal = () => {
                     />
                     <List>
                         {loading ? <CircularProgress size={24} /> : searchResults.map(user => (
-                            <ListItem key={user.id}>
+                            <ListItem key={user._id}>
                                 <ListItemText primary={user.name} />
                                 <ListItemSecondaryAction>
-                                    <Button variant="contained" color="primary" onClick={() => sendFriendRequest(user._id)}>
-                                        Add Friend
-                                    </Button>
+                                    {addFriendLoading ? (
+                                        <CircularProgress size={24} />
+                                    ) : userFriends.includes(user._id) ? (
+                                        <Typography variant="body2">Already Friends</Typography>
+                                    ) : (
+                                        <Button onClick={() => sendFriendRequest(user._id)}>Add Friend</Button>
+                                    )}
                                 </ListItemSecondaryAction>
                             </ListItem>
                         ))}
                     </List>
+
                 </Box>
             </Modal>
         </>

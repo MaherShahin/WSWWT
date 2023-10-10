@@ -20,9 +20,12 @@ const userSlice = createSlice({
     updateUser: (state, action) => {
       state.user = action.payload;
     },
+    addFriend: (state, action) => {
+      state.user.friends.push(action.payload);
+    },
   },
 });
 
-export const { loginUser, logoutUser, updateUser } = userSlice.actions;
+export const { loginUser, logoutUser, updateUser, addFriend } = userSlice.actions;
 
 export default userSlice.reducer;
