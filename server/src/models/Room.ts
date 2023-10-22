@@ -6,18 +6,6 @@ export enum RoomType {
   PRIVATE = 'private'
 }
 
-/**
- * Type to model the Room Schema for TypeScript.
- * @param name:string
- * @param description:string
- * @param users:string[]
- * @param currentSeries:string[]
- * @param password:string
- * @param roomAdmin:string
- * @param roomType:'public' | 'private'
- * @param maxParticipants:number
- */
-
 export type TRoom = {
   name: string;
   description: string;
@@ -33,20 +21,6 @@ export type TRoom = {
   removeUser(userId: Types.ObjectId): void;
 };
 
-/**
- * Mongoose Document based on TRoom for TypeScript.
- * https://mongoosejs.com/docs/documents.html
- *
- * TRoom
- * @param name:string
- * @param description:string
- * @param users:string[]
- * @param currentSeries:string[]
- * @param password:string
- * @param roomAdmin:string
- * @param roomType:'public' | 'private'
- * @param maxParticipants:number
- */
 
 export interface IRoom extends TRoom, Document { }
 
@@ -60,22 +34,6 @@ const roomSchema: Schema = new Schema({
   roomType: { type: String, enum: Object.values(RoomType), required: true },
   maxParticipants: { type: Number },
 });
-
-
-/**
- * Mongoose Model based on TRoom for TypeScript.
- * https://mongoosejs.com/docs/models.html
- *
- * TRoom
- * @param name:string
- * @param description:string
- * @param users:string[]
- * @param currentSeries:string[]
- * @param password:string
- * @param roomAdmin:string
- * @param roomType:'public' | 'private'
- * @param maxParticipants:number
- */
 
 roomSchema.pre<IRoom>("remove", async function (next) {
   const room = this;

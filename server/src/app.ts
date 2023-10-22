@@ -5,6 +5,7 @@ import connectDB from "../config/database";
 import authRouter from "./routes/api/auth";
 import userRouter from "./routes/api/user";
 import roomRouter from "./routes/api/room";
+import friendRouter from "./routes/api/friend";
 import { errorMiddleware } from "./middleware/errorMiddleware";
 import Request from "./types/Request";
 import { Response,NextFunction } from "express";
@@ -29,6 +30,7 @@ app.get("/", (_req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/room", roomRouter);
+app.use("/api/friend", friendRouter);
 app.use(errorMiddleware);
 
 export default app;
