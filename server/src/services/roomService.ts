@@ -1,11 +1,12 @@
 import { Types } from "mongoose";
 import Room, { IRoom, RoomType } from "../models/Room";
-import { ValidationError } from "../errors/validationError";
+import { CustomError } from "../errors/CustomError";
 import { validateRoom } from "../middleware/validation/roomValidation";
 import { hashPassword } from "../utils/encryptionUtils";
 import { UserService } from "./userService";
-import { AuthorizationError } from "../errors/authorizationError";
-import { NotFoundError } from "../errors/notFoundError";
+import { AuthorizationError } from "../errors/AuthorizationError";
+import { NotFoundError } from "../errors/NotFoundError";
+import { RequestErrorCodes } from "../constants/ErrorCodes";
 
 export class RoomService {
 
@@ -17,7 +18,6 @@ export class RoomService {
     roomType: RoomType,
     maxParticipants: number,
   }): Promise<IRoom> {
-    try {
       const room = new Room({ ...params, users: [params.roomAdmin] });
       validateRoom(room);
       if (room.password) {
@@ -29,10 +29,6 @@ export class RoomService {
       await UserService.addJoinedRoomToUser(params.roomAdmin, savedRoom._id);
       console.log('savedRoom', savedRoom);
       return room;
-    } catch (err) {
-      console.log(err);
-      throw new ValidationError([{ message: 'Room could not be created' && err.message }]);
-    }
   }
 
   static async findRoomById(roomId: Types.ObjectId): Promise<IRoom | null> {
@@ -42,13 +38,13 @@ export class RoomService {
   static async updateRoom(userId: Types.ObjectId, roomId: Types.ObjectId, updates: Partial<IRoom>): Promise<IRoom | null> {
     const room = await this.findRoomById(roomId);
 
-    if (!room) throw  new NotFoundError('Room not found');
+    if (!room) throw new NotFoundError('Room not found');
 
     if (!room.roomAdmin.equals(userId)) throw new AuthorizationError('Only room admin can update room');
 
     if (updates.password) {
       if (updates.password.length < 6 || updates.password.length > 50) {
-        throw new ValidationError([{ message: 'Password must be between 6 and 50 characters'}]);
+        throw new CustomError(400,RequestErrorCodes.INVALID_INPUT,'Password must be between 6 and 50 characters',null);
       }
       updates.password = await hashPassword(updates.password);
     }

@@ -5,8 +5,9 @@ import { asyncHandler } from '../utils/asyncHandler';
 import { RoomService } from '../services/roomService';
 import { RoomType } from '../models/Room';
 import { RoomUserService } from '../services/roomUserService';
-import { ValidationError } from '../errors/validationError';
-import { NotFoundError } from '../errors/notFoundError';
+import { ValidationError } from '../errors/ValidationError';
+import { NotFoundError } from '../errors/NotFoundError';
+import { ApiResponse } from '../types/ApiResponse';
 
 interface RoomDto {
     name: string,
@@ -19,7 +20,6 @@ interface RoomDto {
 export class RoomController {
 
     static createRoom = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        console.log('createRoom');
         try {
             const roomAdmin = new Types.ObjectId(req.userId);
             const roomData: RoomDto = req.body;
@@ -27,7 +27,7 @@ export class RoomController {
             const newRoom = await RoomService.createRoom({ ...roomData, roomAdmin });
     
             if (!newRoom) {
-                throw new ValidationError([{ message: 'Room could not be created' }]);
+                throw new ValidationError('Room could not be created');
             }
     
             return res.status(200).json(newRoom);
@@ -39,76 +39,96 @@ export class RoomController {
     });
 
     static getRoomById = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const roomId = new Types.ObjectId(req.params.id);
+        try {
+            const roomId = new Types.ObjectId(req.params.id);
 
-        if (!roomId) {
-            throw new ValidationError([{ message: 'You need to input a roomId' }]);
+            if (!roomId) {
+                throw new ValidationError('You need to input a roomId');
+            }
+    
+            const room = await RoomService.findRoomById(roomId);
+    
+            if (!room) {
+                throw new NotFoundError('Room not found');
+            }
+    
+            room.password = undefined;
+            res.status(200).json(room);
+        } catch (err) {
+            next(err);
         }
-
-        const room = await RoomService.findRoomById(roomId);
-
-        if (!room) {
-            throw new NotFoundError('Room not found');
-        }
-
-        room.password = undefined;
-        res.status(200).json(room);
     });
 
     static joinRoom = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const userId = new Types.ObjectId(req.userId);
-        const roomId = new Types.ObjectId(req.params.roomId);
-        const { password } = req.body;
-
-        const result = await RoomUserService.joinRoom(userId, roomId, password);
-
-        if (!result) { 
-            throw new ValidationError([{ message: 'Could not join room' }]);
+        try {
+            const userId = new Types.ObjectId(req.userId);
+            const roomId = new Types.ObjectId(req.params.roomId);
+            const { password } = req.body;
+    
+            const result = await RoomUserService.joinRoom(userId, roomId, password);
+    
+            if (!result) { 
+                throw new ValidationError('Could not join room');
+            }
+    
+            return new ApiResponse('Joined room', result);
+        } catch (err) {
+            next(err);
         }
-
-        return res.status(200).json(result);
     });
 
     static leaveRoom = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const userId = new Types.ObjectId(req.userId);
-        const roomId = new Types.ObjectId(req.params.roomId);
-
-        const result = await RoomUserService.leaveRoom(userId, roomId);
-
-        if (!result) {
-            throw new ValidationError([{ message: 'Could not leave room' }]);
+        try {
+            const userId = new Types.ObjectId(req.userId);
+            const roomId = new Types.ObjectId(req.params.roomId);
+    
+            const result = await RoomUserService.leaveRoom(userId, roomId);
+    
+            if (!result) {
+                throw new ValidationError('Could not leave room');
+            }
+    
+            return new ApiResponse('Left room successfully' , result);
+        } catch (err) {
+            next(err);
         }
-
-        return res.status(200).json(result);
     });
 
     static deleteRoom = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const userId = new Types.ObjectId(req.userId);
-        const roomId = new Types.ObjectId(req.params.roomId);
-
-        const result = await RoomService.deleteRoom(userId, roomId);
-
-        if (!result) {
-            throw new ValidationError([{ message: 'Could not delete room' }]);
+        try {
+            const userId = new Types.ObjectId(req.userId);
+            const roomId = new Types.ObjectId(req.params.roomId);
+    
+            const result = await RoomService.deleteRoom(userId, roomId);
+    
+            if (!result) {
+                throw new ValidationError('Could not delete room');
+            }
+    
+            return new ApiResponse('Room deleted successfully!', result);
+        } catch (err) {
+            next(err);
         }
-
-        return res.status(200).json({ message: 'Room deleted' });
     });
 
     static updateRoom = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const userId = new Types.ObjectId(req.userId);
-        const roomId = new Types.ObjectId(req.params.roomId);
-        const updates = req.body;
-
-        const room = await RoomService.findRoomById(roomId);
-
-        const result = await RoomService.updateRoom(userId, roomId, updates);
-
-        if (!result) {
-            throw new ValidationError([{ message: 'Could not update room' }]);
+        try {
+            const userId = new Types.ObjectId(req.userId);
+            const roomId = new Types.ObjectId(req.params.roomId);
+            const updates = req.body;
+    
+            const room = await RoomService.findRoomById(roomId);
+    
+            const result = await RoomService.updateRoom(userId, roomId, updates);
+    
+            if (!result) {
+                throw new ValidationError('Could not update room');
+            }
+    
+            return res.status(200).json(result);
+        } catch (err) {
+            next(err);
         }
-
-        return res.status(200).json(result);
     });
 
 }

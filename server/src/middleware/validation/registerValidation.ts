@@ -1,6 +1,8 @@
 import { check, validationResult } from "express-validator";
 import { Request, Response, NextFunction } from "express";
-import { ValidationError } from "../../errors/validationError";
+import { ValidationError } from "../../errors/ValidationError";
+import { RequestErrorCodes } from "../../constants/ErrorCodes";
+import { CustomError } from "../../errors/CustomError";
 
 export const registerValidation = [
     check("email", "Please include a valid email").isEmail(),
@@ -10,13 +12,15 @@ export const registerValidation = [
     (req: Request, res: Response, next: NextFunction) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            throw new ValidationError(errors.array().map(error => {
-                return {
-                    message: error.msg,
-                    field: error.param
-                };
-            }));
-        }        
-        next();
+            const errorsArray = errors.array().map(err => new CustomError(
+                400, 
+                RequestErrorCodes.INVALID_INPUT, 
+                err.msg,
+                { field: err.param }
+            ));
+    
+            return next(errorsArray);
+        }
+        next
     },
 ];

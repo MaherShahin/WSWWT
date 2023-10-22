@@ -7,8 +7,6 @@ import userRouter from "./routes/api/user";
 import roomRouter from "./routes/api/room";
 import friendRouter from "./routes/api/friend";
 import { errorMiddleware } from "./middleware/errorMiddleware";
-import Request from "./types/Request";
-import { Response,NextFunction } from "express";
 
 const app = express();
 

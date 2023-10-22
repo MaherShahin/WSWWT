@@ -4,9 +4,9 @@ import jwt from "jsonwebtoken";
 import config from "config";
 import { comparePasswords } from "../utils/encryptionUtils";
 import { UserService } from "./userService";
-import { ValidationError } from "../errors/validationError";
-import { AuthorizationError } from "../errors/authorizationError";
-import { AuthenticationError } from "../errors/authenticationError";
+import { ValidationError } from "../errors/ValidationError";
+import { AuthorizationError } from "../errors/AuthorizationError";
+import { AuthenticationError } from "../errors/AuthenticationError";
 
 interface LoginResponse {
   token: string;
@@ -20,13 +20,13 @@ export class AuthService {
       const user: IUser = await User.findOne({ email });
 
       if (!user) {
-        throw new AuthenticationError("Invalid credentials");
+        throw new AuthenticationError("Invalid credentials, no user with that email exists");
       }
   
       const isMatch = await comparePasswords(password, user.password); 
   
       if (!isMatch) {
-        throw new AuthenticationError("Invalid credentials");
+        throw new AuthenticationError("Invalid credentials, password is incorrect");
       }
   
       const payload: Payload = {
@@ -47,7 +47,7 @@ export class AuthService {
   
     } catch (err) {
       console.log(err);
-      throw new AuthenticationError("Invalid credentials");
+      throw new AuthenticationError("Invalid credentials, no further details available");
     
     }
   }
@@ -56,7 +56,7 @@ export class AuthService {
     let user: IUser = await User.findOne({ email });
 
     if (user) {
-      throw new ValidationError([{ message: "User already exists, please choose a different email" }]);
+      throw new ValidationError("User already exists, please choose a different email");
     }
 
     user = await UserService.createUser(password, email, username, name);

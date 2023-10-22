@@ -3,7 +3,7 @@ import Request from "../types/Request";
 import { UserService } from "../services/userService";
 import { asyncHandler } from "../utils/asyncHandler";
 import { Types } from "mongoose";
-import { NotFoundError } from '../errors/notFoundError';
+import { NotFoundError } from '../errors/NotFoundError';
 import { FriendService } from "../services/friendService";
 
 export class FriendController {

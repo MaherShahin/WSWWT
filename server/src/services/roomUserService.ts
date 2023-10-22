@@ -2,7 +2,7 @@ import { Types } from 'mongoose';
 import User from '../models/User';
 import Room from '../models/Room';
 import { validateRoomJoin, validateRoomLeave } from '../middleware/validation/roomValidation';
-import { ValidationError } from '../errors/validationError';
+import { NotFoundError } from '../errors/NotFoundError';
 
 export class RoomUserService {
   static async joinRoom(userId: Types.ObjectId, roomId: Types.ObjectId, password?: string) {
@@ -10,11 +10,12 @@ export class RoomUserService {
     const room = await Room.findById(roomId);
 
     if (!user || !room) {
-      throw new ValidationError([{ message: 'User or room not found' }]);
+      throw new NotFoundError('User or room not found');
     }
     
     validateRoomJoin(user, room, password);
 
+    //TODO: refactor this later so it's one transaction!
     user.addJoinedRoom(roomId);
     await user.save();
 
@@ -27,6 +28,10 @@ export class RoomUserService {
   static async leaveRoom(userId: Types.ObjectId, roomId: Types.ObjectId) {
     const user = await User.findById(userId);
     const room = await Room.findById(roomId);
+
+    if (!user || !room) {
+      throw new NotFoundError('User or room not found');
+    }
 
     validateRoomLeave(user, room);
 

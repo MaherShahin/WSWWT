@@ -1,5 +1,5 @@
 import config from "config";
-import { DatabaseError } from "../src/errors/databaseError";
+import { DatabaseError } from "../src/errors/DatabaseError";
 import { connect } from "mongoose";
 
 const connectDB = async () => {

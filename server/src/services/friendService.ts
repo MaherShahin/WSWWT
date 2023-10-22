@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { ValidationError } from "../errors/validationError";
+import { ValidationError } from "../errors/ValidationError";
 import User, { IUser } from "../models/User";
 import FriendRequest, { IFriendRequest, TFriendRequest } from "../models/FriendRequest";
 
@@ -15,11 +15,11 @@ export class FriendService {
         const friendAlreadyAdded = user?.friends.includes(friendId);
 
         if (!user || !friend) {
-            throw new ValidationError([{ message: 'Could not add friend, either user or friend dont exist' }]);
+            throw new ValidationError('Could not add friend, either user or friend dont exist');
         }
 
         if (friendAlreadyAdded) {
-            throw new ValidationError([{ message: 'Friend already added' }]);
+            throw new ValidationError('Friend already added');
         }
 
         user.friends.push(friendId);
@@ -37,11 +37,11 @@ export class FriendService {
 
 
         if (!user || !friend) {
-            throw new ValidationError([{ message: 'Could not remove friend, either user or friend dont exist' }]);
+            throw new ValidationError('Could not remove friend, either user or friend dont exist');
         }
 
         if (!user?.friends.includes(friendId)) {
-            throw new ValidationError([{ message: 'User is not in the friend list!' }]);
+            throw new ValidationError('User is not in the friend list!');
         }
 
         user.friends = user.friends.filter((id: Types.ObjectId) => !id.equals(friendId));
@@ -54,88 +54,85 @@ export class FriendService {
     };
 
     static async sendFriendRequest(userId: Types.ObjectId, friendId: Types.ObjectId): Promise<IFriendRequest | { message: string }[]> {
-        try {
-            const existingRequest = await FriendRequest.findOne({
-                $or: [
-                    { from: userId, to: friendId },
-                    { from: friendId, to: userId }
-                ]
-            });
+        const existingRequest = await FriendRequest.findOne({
+            $or: [
+                { from: userId, to: friendId },
+                { from: friendId, to: userId }
+            ]
+        });
 
-            if (existingRequest) {
-                throw new ValidationError([{ message: "A friend request already exists between these users." }]);
-            }
-
-            const newRequest: TFriendRequest = {
-                from: userId,
-                to: friendId,
-                status: "pending",
-                dateCreated: new Date(),
-            };
-
-            const createdRequest = await FriendRequest.create(newRequest);
-            return createdRequest;
-
-        } catch (error) {
-            console.error("An error occurred while sending friend request:", error);
-            throw new ValidationError([{ message: "Unable to send friend request" }]);
+        if (existingRequest) {
+            throw new ValidationError("A friend request already exists between these users.");
         }
+
+        const newRequest: TFriendRequest = {
+            from: userId,
+            to: friendId,
+            status: "pending",
+            dateCreated: new Date(),
+        };
+
+        const createdRequest = await FriendRequest.create(newRequest);
+
+        if (!createdRequest) {
+            throw new ValidationError("Unable to send friend request");
+        }
+
+        return createdRequest;
+
     };
 
     static async acceptFriendRequest(requestId: Types.ObjectId, userId: Types.ObjectId): Promise<IFriendRequest | IUser | null> {
-        try {
-            const request = await FriendRequest.findById(requestId);
-            if (!request || request.status !== 'pending' || !request.to.equals(userId)) {
-                throw new ValidationError([{ message: 'Invalid or expired friend request' }]);
-            }
-
-            request.status = 'accepted';
-            await request.save();
-
-            const user = await this.addFriend(request.from, request.to);
-            await this.addFriend(request.to, request.from);
-
-            return user;
-
-        } catch (error) {
-            console.error("An error occurred while accepting the friend request:", error);
-            throw new ValidationError([{ message: 'Unable to accept friend request' }]);
+        const request = await FriendRequest.findById(requestId);
+        if (!request || request.status !== 'pending' || !request.to.equals(userId)) {
+            throw new ValidationError('Invalid or expired friend request');
         }
+
+        request.status = 'accepted';
+        await request.save();
+
+        const user = await this.addFriend(request.from, request.to);
+        const friend = await this.addFriend(request.to, request.from);
+
+        if (!user || !friend) {
+            throw new ValidationError('Unable to accept friend request');
+        }
+
+        return user;
     };
 
     static async rejectFriendRequest(requestId: Types.ObjectId, userId: Types.ObjectId): Promise<IFriendRequest | null> {
-        try {
-            const request = await FriendRequest.findById(requestId);
-            if (!request || request.status !== 'pending' || !request.to.equals(userId)) {
-                throw new ValidationError([{ message: 'Invalid or expired friend request' }]);
-            }
+        const request = await FriendRequest.findById(requestId);
 
-            request.status = 'rejected';
-            await request.save();
-
-            return request;
-
-        } catch (error) {
-            console.error("An error occurred while rejecting the friend request:", error);
-            throw new ValidationError([{ message: 'Unable to reject friend request' }]);
+        if (!request || request.status !== 'pending' || !request.to.equals(userId)) {
+            throw new ValidationError('Invalid or expired friend request');
         }
+
+        request.status = 'rejected';
+        const response = await request.save();
+
+        if (!response) {
+            throw new ValidationError('Unable to reject friend request');
+        }
+
+        return request;
+
     }
 
     static async getFriendRequests(userId: Types.ObjectId): Promise<IFriendRequest[]> {
-        try {
-            const friendRequests = await FriendRequest.find({
-                $or: [
-                    { from: userId },
-                    { to: userId }
-                ]
-            }).sort({ dateCreated: -1 });
 
-            return friendRequests;
+        const friendRequests = await FriendRequest.find({
+            $or: [
+                { from: userId },
+                { to: userId }
+            ]
+        }).sort({ dateCreated: -1 });
 
-        } catch (error) {
-            console.error("An error occurred while fetching friend requests:", error);
-            throw new ValidationError([{ message: 'Unable to fetch friend requests' }]);
+        if (!friendRequests) {
+            throw new ValidationError('Unable to fetch friend requests');
         }
+
+        return friendRequests;
     }
 
 }
