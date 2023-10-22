@@ -4,13 +4,11 @@ import { InsertEmoticonOutlined } from '@mui/icons-material';
 import { useApi } from '../../hooks/useApi';
 import Modal from '@mui/material/Modal';
 import { useSelector } from 'react-redux';
-import { addFriend } from '../../redux/user/userSlice';
-import { useDispatch } from 'react-redux';
 
 const UserSearchModal = () => {
 
     const USER_SEARCH_ENDPOINT = '/user/search';
-    const USER_FRIEND_REQUEST_ENDPOINT = '/user/addFriend';
+    const USER_FRIEND_REQUEST_ENDPOINT = '/friend/sendFriendRequest';
 
     const userFriends = useSelector(state => state.user?.user.friends);
 
@@ -20,7 +18,6 @@ const UserSearchModal = () => {
     const [addFriendLoading, setAddFriendLoading] = useState(false);
 
     const { request } = useApi();
-    const dispatch = useDispatch();
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -50,11 +47,7 @@ const UserSearchModal = () => {
                     friendId,
                 },
             });
-            
-            if (res.data.success) {
-                dispatch(addFriend(friendId))
-                console.log(res.data);    
-            }
+            console.log(res.data);
         } catch (error) {
             console.log(error);
         }

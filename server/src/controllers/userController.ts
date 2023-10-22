@@ -50,34 +50,6 @@ export class UserController {
     res.status(200).json({'rooms': rooms});
   });
 
-  static addFriend = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const userId = new Types.ObjectId(req.userId);
-    const friendId = new Types.ObjectId(req.body.friendId);
-
-    console.log(userId);
-    console.log(friendId);
-
-    const user = await UserService.addFriend(userId, friendId);
-    
-    if (!user) {
-      throw new NotFoundError();
-    }
-
-    res.status(200).json({ user: user.toObject() });
-  });  
-
-  static removeFriend = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const userId = new Types.ObjectId(req.userId);
-    const friendId = new Types.ObjectId(req.params.friendId);
-    const user = await UserService.removeFriend(userId, friendId);
-    
-    if (!user) {
-      throw new NotFoundError();
-    }
-
-    res.status(200).json({ user: user.toObject() });
-  });
-
   static searchUsers = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const userId = new Types.ObjectId(req.userId);
     const query = String(req.query.q).trim();

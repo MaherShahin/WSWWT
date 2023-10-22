@@ -9,9 +9,7 @@ router.get("/rooms", authMiddleware, UserController.getUserRooms);
 router.get("/find/:id", UserController.getUserById);
 router.put("/update", authMiddleware, UserController.update);
 router.delete("/delete", authMiddleware, UserController.delete);
-
 router.get('/search', authMiddleware, UserController.searchUsers);
-router.post('/addFriend', authMiddleware, UserController.addFriend);
   
 export default router;
 

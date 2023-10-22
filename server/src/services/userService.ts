@@ -92,54 +92,6 @@ export class UserService {
     return { joinedRooms: joinedRooms, createdRooms: createdRooms}
   };
 
-  static async addFriend(userId: Types.ObjectId, friendId: Types.ObjectId) {
-    const user = await User.findById(userId);
-    const friend = await User.findById(friendId);
-    
-    console.log(userId)
-    console.log(friendId)
-
-    const friendAlreadyAdded = user?.friends.includes(friendId);
-
-    if (!user || !friend) {
-      throw new ValidationError([{ message: 'Could not add friend, either user or friend dont exist' }]);
-    }
-
-    if (friendAlreadyAdded) {
-      throw new ValidationError([{ message: 'Friend already added' }]);
-    }
-
-    user.friends.push(friendId);
-    await user.save();
-
-    friend.friends.push(userId);
-    await friend.save();
-
-    return user;
-  };
-
-  static async removeFriend(userId: Types.ObjectId, friendId: Types.ObjectId) {
-    const user = await User.findById(userId);
-    const friend = await User.findById(friendId);
-
-
-    if (!user || !friend) {
-      throw new ValidationError([{ message: 'Could not remove friend, either user or friend dont exist' }]);
-    }
-
-    if (!user?.friends.includes(friendId)) {
-      throw new ValidationError([{ message: 'User is not in the friend list!' }]);
-    }
-
-    user.friends = user.friends.filter((id: Types.ObjectId) => !id.equals(friendId));
-    await user.save();
-
-    friend.friends = friend.friends.filter((id: Types.ObjectId) => !id.equals(userId));
-    await friend.save();
-
-    return user;
-  };
-
   static async getUsers() {
     return User.find().select("-password");
   }
@@ -148,7 +100,5 @@ export class UserService {
     const regex = new RegExp(`^${query}`, 'i');
     return User.find({ name: { $regex: regex } }).select("-password");
   }
-
-
 
 }
