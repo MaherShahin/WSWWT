@@ -16,7 +16,6 @@ interface LoginResponse {
 export class AuthService {
 
   static async loginUser(email: string, password: string): Promise<LoginResponse> {
-    try {
       const user: IUser = await User.findOne({ email });
 
       if (!user) {
@@ -43,14 +42,9 @@ export class AuthService {
       
       const userObj: Omit<IUser, 'password'> = user.toObject();      
       return { token, user: userObj };
-  
-  
-    } catch (err) {
-      console.log(err);
-      throw new AuthenticationError("Invalid credentials, no further details available");
-    
+      
     }
-  }
+  
 
   static async registerUser(email: string, username: string, name: string, password: string): Promise<string> {
     let user: IUser = await User.findOne({ email });

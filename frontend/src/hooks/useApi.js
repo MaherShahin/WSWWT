@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { apiRequest } from '../utils/apiUtil';
+import { toast } from 'react-toastify';
 
 export const useApi = () => {
     const navigate = useNavigate();
@@ -18,8 +19,9 @@ export const useApi = () => {
                 case 500:
                     navigate('/server-error');
                     break;
-                default:
-                    console.error(error);
+                default: 
+                    console.error("Api hook error : " + error);
+                    navigate('/');
             }
             return error.response; 
         }
