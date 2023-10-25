@@ -1,113 +1,101 @@
 import { NextFunction, Response } from "express";
 import Request from "../types/Request";
 import { UserService } from "../services/userService";
-import { asyncHandler } from "../utils/asyncHandler";
+import { handleApiResponse } from "../utils/apiUtils";
 import { Types } from "mongoose";
 import { NotFoundError } from '../errors/NotFoundError';
 import { FriendService } from "../services/friendService";
+import { ApiResponse } from "../types/ApiResponse";
 
 export class FriendController {
 
-  static getFriends = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    try {    
-      const userId = new Types.ObjectId(req.userId);
-      const user = await UserService.findUserById(userId);
-      
-      if (!user) {
-        throw new NotFoundError();
-      }
-      
-      res.status(200).json({'friends': []});
-    } catch (error) {
-      next(error);
-    }
-  });
+  static getFriends = handleApiResponse(async (req: Request, res: Response, next: NextFunction) => {
 
-  static removeFriend = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const userId = new Types.ObjectId(req.userId);
-      const friendId = new Types.ObjectId(req.params.friendId);
-      const user = await FriendService.removeFriend(userId, friendId);
-      
-      if (!user) {
-        throw new NotFoundError();
-      }
-  
-      res.status(200).json({ user: user.toObject() });  
-    } catch (error) {
-      next(error);
+    const userId = new Types.ObjectId(req.userId);
+    const user = await UserService.findUserById(userId);
+
+    const friendsList = user.getFriends();
+
+    if (!user) {
+      throw new NotFoundError();
     }
+
+    return new ApiResponse('Friends retrieved successfully', user.friends);
 
   });
 
-  static getFriendRequests = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const userId = new Types.ObjectId(req.userId);
+  static removeFriend = handleApiResponse(async (req: Request, res: Response, next: NextFunction) => {
 
-      if (!userId) {
-        throw new NotFoundError();
-      }
-  
-      const friendRequests = await FriendService.getFriendRequests(userId);
-  
-      res.status(200).json({ friendRequests: friendRequests });
-    } catch (error) {
-      next(error);
+    const userId = new Types.ObjectId(req.userId);
+    const friendId = new Types.ObjectId(req.params.friendId);
+    const user = await FriendService.removeFriend(userId, friendId);
+
+    if (!user) {
+      throw new NotFoundError();
     }
+
+    return new ApiResponse('Friend removed successfully', user);
+
 
   });
 
-  static sendFriendRequest = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        const userId = new Types.ObjectId(req.userId);
-        const friendId = new Types.ObjectId(req.body.friendId);
-        const friendRequest = await FriendService.sendFriendRequest(userId, friendId);
-        
-        if (!friendRequest) {
-          throw new NotFoundError();
-        }
-    
-        res.status(200).json({ friendRequest: friendRequest });
-      } catch (error) {
-        next(error);
-      }
-  });
+  static getFriendRequests = handleApiResponse(async (req: Request, res: Response, next: NextFunction) => {
+    const userId = new Types.ObjectId(req.userId);
 
-  static acceptFriendRequest = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-
-    try {
-      const userId = new Types.ObjectId(req.userId);
-      const friendId = new Types.ObjectId(req.body.friendId);
-  
-      if (!userId || !friendId) {
-        throw new NotFoundError();
-      }
-  
-      const user = await FriendService.addFriend(userId, friendId);
-  
-      res.status(200).json({ user: user.toObject() });
-    } catch (error) {
-      next(error);
+    if (!userId) {
+      throw new NotFoundError();
     }
 
+    const friendRequests = await FriendService.getFriendRequests(userId);
 
-  });  
+    var test = [{ message:'test' }];
 
-  static rejectFriendRequest = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const userId = new Types.ObjectId(req.userId);
-      const friendId = new Types.ObjectId(req.body.friendId);
-      const user = await FriendService.removeFriend(userId, friendId);
-      
-      if (!user || !friendId) {
-        throw new NotFoundError();
-      }
-  
-      res.status(200).json({ user: user.toObject() });
-    } catch (error) {
-      next(error);
+    return new ApiResponse('Friend requests retrieved successfully', test);
+  });
+
+  static sendFriendRequest = handleApiResponse(async (req: Request, res: Response, next: NextFunction) => {
+    const userId = new Types.ObjectId(req.userId);
+    const friendId = new Types.ObjectId(req.body.friendId);
+    const friendRequest = await FriendService.sendFriendRequest(userId, friendId);
+
+    if (!friendRequest) {
+      throw new NotFoundError();
     }
 
+    return new ApiResponse('Friend request sent successfully', friendRequest);
   });
+
+  static acceptFriendRequest = handleApiResponse(async (req: Request, res: Response, next: NextFunction) => {
+
+
+    const userId = new Types.ObjectId(req.userId);
+    const friendId = new Types.ObjectId(req.body.friendId);
+
+    if (!userId || !friendId) {
+      throw new NotFoundError();
+    }
+
+    const user = await FriendService.addFriend(userId, friendId);
+
+    return new ApiResponse('Friend request accepted successfully', user);
+
+  });
+
+  static rejectFriendRequest = handleApiResponse(async (req: Request, res: Response, next: NextFunction) => {
+
+    const userId = new Types.ObjectId(req.userId);
+    const friendId = new Types.ObjectId(req.body.friendId);
+    const user = await FriendService.removeFriend(userId, friendId);
+
+    if (!user || !friendId) {
+      throw new NotFoundError();
+    }
+
+    return new ApiResponse('Friend request rejected successfully', user);
+
+
+  });
+
+
 
 }

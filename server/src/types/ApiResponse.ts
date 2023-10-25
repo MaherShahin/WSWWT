@@ -1,6 +1,6 @@
 import { Response } from 'express';
 
-type ApiResponsePayload = any;
+type ApiResponsePayload = Record<string, any>;;
 
 export class ApiResponse<T extends ApiResponsePayload> {
   constructor(
@@ -14,7 +14,7 @@ export class ApiResponse<T extends ApiResponsePayload> {
     res.status(this.status).json({
       success: this.status < 300,
       message: this.message,
-      data: this.payload,
+      data: this.payload ?? {},
       errors: this.errors 
     });
   }
