@@ -12,8 +12,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { updateUser } from '../redux/user/userSlice';
-import { useApi } from '../hooks/useApi';
+import { updateUserAction } from '../redux/user/userSlice';
+import { useApi } from '../api/useApi';
 
 const ProfilePage = () => {
 
@@ -37,7 +37,7 @@ const ProfilePage = () => {
             const response = await request('put', '/user/update', updatedUser);
             console.log(response.data);
             const user = response.data;
-            dispatch(updateUser(user));
+            dispatch(updateUserAction(user));
             toast.success('User updated successfully');
         } catch (error) {
             toast.error(error.response.data.errors[0].msg);

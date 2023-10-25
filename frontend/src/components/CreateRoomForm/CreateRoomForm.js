@@ -1,9 +1,10 @@
 import { Button, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, Stack, Switch, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { useApi } from '../../hooks/useApi';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { createRoom } from '../../redux/room/roomSlice';
+import ApiResponse from '../../api/ApiResponse';
+import { createRoomAction } from '../../redux/room/roomSlice';
+import { useCreateRoom } from '../../hooks/useRooms';
 
 const CreateRoomForm = () => {
 
@@ -11,9 +12,6 @@ const CreateRoomForm = () => {
         PUBLIC: 'public',
         PRIVATE: 'private'
     }
-
-
-    const CREATE_ROOM_API_ENDPOINT = '/room/create';
 
     const [roomName, setRoomName] = useState('');
     const [description, setDescription] = useState('');
@@ -23,9 +21,8 @@ const CreateRoomForm = () => {
 
     const [errors, setErrors] = useState({});
 
-    const { request } = useApi();
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const { createRoom } = useCreateRoom();
 
     const validateForm = () => {
         const newErrors = {};
@@ -58,7 +55,7 @@ const CreateRoomForm = () => {
     const handleSubmit = async () => {
         if (!validateForm()) return;
 
-        const roomData = {
+        const roomInfo = {
             name: roomName,
             description: description,
             roomType: roomType,
@@ -67,24 +64,10 @@ const CreateRoomForm = () => {
         };
 
         try {
-            const response = await request({
-                method: 'post',
-                url: CREATE_ROOM_API_ENDPOINT,
-                data: roomData
-            });
-    
-            if (!response) return;
-    
-            if (response.status === 200) {
-                console.log('response', response);
-                const room = response.data;
-                dispatch(createRoom(room));
-                navigate('/room/' + response.data._id);
-            }
+            await createRoom(roomInfo);
         } catch (error) {
             console.log(error);
         }
-        
     }
 
     return (

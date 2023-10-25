@@ -9,23 +9,23 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    loginUser: (state, action) => {
+    loginAction: (state, action) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
     },
-    logoutUser: (state) => {
+    logoutAction: (state) => {
       state.user = null;
       state.token = '';
     },
-    updateUser: (state, action) => {
+    updateUserAction: (state, action) => {
       state.user = action.payload;
     },
-    addFriend: (state, action) => {
+    addFriendAction: (state, action) => {
       state.user.friends.push(action.payload);
     },
   },
 });
 
-export const { loginUser, logoutUser, updateUser, addFriend } = userSlice.actions;
+export const { loginAction, logoutAction, updateUserAction, addFriendAction } = userSlice.actions;
 
 export default userSlice.reducer;

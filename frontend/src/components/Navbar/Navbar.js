@@ -16,8 +16,8 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
-import { logoutUser } from '../../redux/user/userSlice';
-
+import { logoutAction } from '../../redux/user/userSlice';
+import NotificationsDropDown from '../Notifications/NotificationsDropDown';
 
 const settings = [
   { name: 'Profile', href: '/profile' },
@@ -54,7 +54,7 @@ const ResponsiveAppBar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    dispatch(logoutUser());
+    dispatch(logoutAction());
     navigate('/')
   }
 
@@ -117,6 +117,8 @@ const ResponsiveAppBar = () => {
           </Box>
 
           {user ? (
+            <>
+            <NotificationsDropDown />
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -149,6 +151,7 @@ const ResponsiveAppBar = () => {
                 ))}
               </Menu>
             </Box>
+            </>
           ) : (
             <Box sx={{ flexGrow: 0 }}>
               <Button component={Link} to="/login" color="inherit">
@@ -159,7 +162,6 @@ const ResponsiveAppBar = () => {
               </Button>
             </Box>
           )}
-
         </Toolbar>
       </Container>
     </AppBar>
