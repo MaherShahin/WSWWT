@@ -2,8 +2,8 @@ import { Document, model, Schema, Types } from "mongoose";
 import User from "./User";
 
 export enum RoomType {
-  PUBLIC = 'public',
-  PRIVATE = 'private'
+  PUBLIC = "public",
+  PRIVATE = "private",
 }
 
 export type TRoom = {
@@ -23,16 +23,15 @@ export type TRoom = {
   removeSeries(seriesId: Types.ObjectId): void;
 };
 
-
-export interface IRoom extends TRoom, Document { }
+export interface IRoom extends TRoom, Document {}
 
 const roomSchema: Schema = new Schema({
   name: { type: String, required: true },
   description: { type: String },
-  users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  users: [{ type: Schema.Types.ObjectId, ref: "User" }],
   currentSeries: [{ type: String }],
   password: { type: String, required: false },
-  roomAdmin: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  roomAdmin: { type: Schema.Types.ObjectId, ref: "User", required: true },
   roomType: { type: String, enum: Object.values(RoomType), required: true },
   maxParticipants: { type: Number },
 });
@@ -41,7 +40,7 @@ roomSchema.pre<IRoom>("remove", async function (next) {
   const room = this;
   await User.updateMany(
     { _id: { $in: room.users } },
-    { $pull: { createdRooms: room._id, joinedRooms: room._id } }
+    { $pull: { createdRooms: room._id, joinedRooms: room._id } },
   );
   next();
 });

@@ -48,17 +48,17 @@ const userSchema: Schema = new Schema({
   },
   createdRooms: {
     type: [Types.ObjectId],
-    ref: 'Room', 
+    ref: "Room",
     default: [],
   },
   joinedRooms: {
     type: [Types.ObjectId],
-    ref: 'Room', 
+    ref: "Room",
     default: [],
   },
   friends: {
     type: [Types.ObjectId],
-    ref: 'User', 
+    ref: "User",
     default: [],
   },
   profilePicture: {
@@ -84,7 +84,7 @@ userSchema.pre<IUser>("remove", async function (next) {
 
   await Room.updateMany(
     { _id: { $in: user.joinedRooms } },
-    { $pull: { users: user._id } }
+    { $pull: { users: user._id } },
   );
 
   // Delete all rooms created by the user
@@ -96,38 +96,41 @@ userSchema.pre<IUser>("remove", async function (next) {
   next();
 });
 
-userSchema.methods.addJoinedRoom = function(roomId: Types.ObjectId) {
+userSchema.methods.addJoinedRoom = function (roomId: Types.ObjectId) {
   this.joinedRooms.push(roomId);
 };
 
-userSchema.methods.removeJoinedRoom = function(roomId: Types.ObjectId) {
-  this.joinedRooms = this.joinedRooms.filter((id: Types.ObjectId) => !id.equals(roomId));
+userSchema.methods.removeJoinedRoom = function (roomId: Types.ObjectId) {
+  this.joinedRooms = this.joinedRooms.filter(
+    (id: Types.ObjectId) => !id.equals(roomId),
+  );
 };
 
-userSchema.methods.addCreatedRoom = function(roomId: Types.ObjectId) {
+userSchema.methods.addCreatedRoom = function (roomId: Types.ObjectId) {
   this.createdRooms.push(roomId);
-}
+};
 
-userSchema.methods.getJoinedRooms = async function() {
+userSchema.methods.getJoinedRooms = async function () {
   return Room.find({ _id: { $in: this.joinedRooms } });
-}
+};
 
-userSchema.methods.getCreatedRooms = async function() {
+userSchema.methods.getCreatedRooms = async function () {
   return Room.find({ _id: { $in: this.createdRooms } });
-}
+};
 
-userSchema.methods.addFriend = function(friendId: Types.ObjectId) {
+userSchema.methods.addFriend = function (friendId: Types.ObjectId) {
   this.friends.push(friendId);
-}
+};
 
-userSchema.methods.removeFriend = function(friendId: Types.ObjectId) {
-  this.friends = this.friends.filter((id: Types.ObjectId) => !id.equals(friendId));
-}
+userSchema.methods.removeFriend = function (friendId: Types.ObjectId) {
+  this.friends = this.friends.filter(
+    (id: Types.ObjectId) => !id.equals(friendId),
+  );
+};
 
-userSchema.methods.getFriends = async function() {
+userSchema.methods.getFriends = async function () {
   return User.find({ _id: { $in: this.friends } });
-}
-
+};
 
 const User = model<IUser>("User", userSchema);
 

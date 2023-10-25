@@ -2,9 +2,13 @@ export class CustomError extends Error {
   httpStatus: number;
   errorCode: string;
   details?: any;
-  
 
-  constructor(httpStatus: number, errorCode: string, message: string, details?: any) {
+  constructor(
+    httpStatus: number,
+    errorCode: string,
+    message: string,
+    details?: any,
+  ) {
     super(message);
     this.httpStatus = httpStatus;
     this.errorCode = errorCode;
@@ -19,5 +23,4 @@ export class CustomError extends Error {
       details: this.details,
     };
   }
-
 }

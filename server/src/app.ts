@@ -1,6 +1,6 @@
 import bodyParser from "body-parser";
 import express from "express";
-import cors from 'cors';
+import cors from "cors";
 import connectDB from "../config/database";
 import authRouter from "./routes/api/auth";
 import userRouter from "./routes/api/user";
@@ -19,7 +19,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 app.use(express.json());
-
 
 app.get("/", (_req, res) => {
   res.send("API Running");

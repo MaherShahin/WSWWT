@@ -1,5 +1,5 @@
 import { Document, model, Schema, Types } from "mongoose";
-import { IUser } from "./User";  
+import { IUser } from "./User";
 
 export type TFriendRequest = {
   from: Types.ObjectId;
@@ -13,18 +13,18 @@ export interface IFriendRequest extends TFriendRequest, Document {}
 const friendRequestSchema: Schema = new Schema({
   from: {
     type: Types.ObjectId,
-    ref: 'User', 
+    ref: "User",
     required: true,
   },
   to: {
     type: Types.ObjectId,
-    ref: 'User', 
+    ref: "User",
     required: true,
   },
   status: {
     type: String,
-    enum: ['pending', 'accepted', 'rejected'],
-    default: 'pending',
+    enum: ["pending", "accepted", "rejected"],
+    default: "pending",
   },
   dateCreated: {
     type: Date,
@@ -32,6 +32,9 @@ const friendRequestSchema: Schema = new Schema({
   },
 });
 
-const FriendRequest = model<IFriendRequest>("FriendRequest", friendRequestSchema);
+const FriendRequest = model<IFriendRequest>(
+  "FriendRequest",
+  friendRequestSchema,
+);
 
 export default FriendRequest;

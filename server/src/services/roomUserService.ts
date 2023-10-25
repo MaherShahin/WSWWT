@@ -1,18 +1,25 @@
-import { Types } from 'mongoose';
-import User from '../models/User';
-import Room from '../models/Room';
-import { validateRoomJoin, validateRoomLeave } from '../middleware/validation/roomValidation';
-import { NotFoundError } from '../errors/NotFoundError';
+import { Types } from "mongoose";
+import User from "../models/User";
+import Room from "../models/Room";
+import {
+  validateRoomJoin,
+  validateRoomLeave,
+} from "../middleware/validation/roomValidation";
+import { NotFoundError } from "../errors/NotFoundError";
 
 export class RoomUserService {
-  static async joinRoom(userId: Types.ObjectId, roomId: Types.ObjectId, password?: string) {
+  static async joinRoom(
+    userId: Types.ObjectId,
+    roomId: Types.ObjectId,
+    password?: string,
+  ) {
     const user = await User.findById(userId);
     const room = await Room.findById(roomId);
 
     if (!user || !room) {
-      throw new NotFoundError('User or room not found');
+      throw new NotFoundError("User or room not found");
     }
-    
+
     validateRoomJoin(user, room, password);
 
     //TODO: refactor this later so it's one transaction!
@@ -21,7 +28,7 @@ export class RoomUserService {
 
     room.addUser(userId);
     await room.save();
-    
+
     return { user, room };
   }
 
@@ -30,7 +37,7 @@ export class RoomUserService {
     const room = await Room.findById(roomId);
 
     if (!user || !room) {
-      throw new NotFoundError('User or room not found');
+      throw new NotFoundError("User or room not found");
     }
 
     validateRoomLeave(user, room);
@@ -38,7 +45,7 @@ export class RoomUserService {
     user.removeJoinedRoom(roomId);
     await user.save();
 
-    if(room.roomAdmin.equals(userId)) {
+    if (room.roomAdmin.equals(userId)) {
       await room.deleteOne();
     } else {
       room.removeUser(userId);
@@ -46,7 +53,5 @@ export class RoomUserService {
     }
 
     return { user, room };
-  }    
-  
+  }
 }
-

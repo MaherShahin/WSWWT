@@ -1,13 +1,13 @@
-import { Response } from 'express';
+import { Response } from "express";
 
-type ApiResponsePayload = Record<string, any>;;
+type ApiResponsePayload = Record<string, any>;
 
 export class ApiResponse<T extends ApiResponsePayload> {
   constructor(
     private message: string,
     private payload: T,
     private status: number = 200,
-    private errors: any = null
+    private errors: any = null,
   ) {}
 
   send(res: Response) {
@@ -15,7 +15,7 @@ export class ApiResponse<T extends ApiResponsePayload> {
       success: this.status < 300,
       message: this.message,
       data: this.payload ?? {},
-      errors: this.errors 
+      errors: this.errors,
     });
   }
 }

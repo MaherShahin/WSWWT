@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { ApiResponse } from '../types/ApiResponse';
+import { Request, Response, NextFunction } from "express";
+import { ApiResponse } from "../types/ApiResponse";
 
 //TODO: Remove export once it is completely replaced
 // handles
@@ -22,7 +22,7 @@ export const handleApiResponse = (fn: Function) => {
       if (result instanceof ApiResponse) {
         result.send(res);
       } else {
-        new ApiResponse('Operation successful', result).send(res);
+        new ApiResponse("Operation successful", result).send(res);
       }
     } catch (error) {
       next(error);

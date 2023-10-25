@@ -1,117 +1,115 @@
-import { Response, NextFunction } from 'express';
-import Request from '../types/Request';
-import { Types } from 'mongoose';
-import { handleApiResponse } from '../utils/apiUtils';
-import { RoomService } from '../services/roomService';
-import { RoomType } from '../models/Room';
-import { RoomUserService } from '../services/roomUserService';
-import { ValidationError } from '../errors/ValidationError';
-import { NotFoundError } from '../errors/NotFoundError';
-import { ApiResponse } from '../types/ApiResponse';
+import { Response, NextFunction } from "express";
+import Request from "../types/Request";
+import { Types } from "mongoose";
+import { handleApiResponse } from "../utils/apiUtils";
+import { RoomService } from "../services/roomService";
+import { RoomType } from "../models/Room";
+import { RoomUserService } from "../services/roomUserService";
+import { ValidationError } from "../errors/ValidationError";
+import { NotFoundError } from "../errors/NotFoundError";
+import { ApiResponse } from "../types/ApiResponse";
 
 interface RoomDto {
-    name: string,
-    description: string,
-    password?: string,
-    roomType: RoomType,
-    maxParticipants: number,
+  name: string;
+  description: string;
+  password?: string;
+  roomType: RoomType;
+  maxParticipants: number;
 }
 
 export class RoomController {
+  static createRoom = handleApiResponse(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const roomAdmin = new Types.ObjectId(req.userId);
+      const roomData: RoomDto = req.body;
 
-    static createRoom = handleApiResponse(async (req: Request, res: Response, next: NextFunction) => {
-        const roomAdmin = new Types.ObjectId(req.userId);
-        const roomData: RoomDto = req.body;
+      const newRoom = await RoomService.createRoom({ ...roomData, roomAdmin });
 
-        const newRoom = await RoomService.createRoom({ ...roomData, roomAdmin });
+      if (!newRoom) {
+        throw new ValidationError("Room could not be created");
+      }
 
-        if (!newRoom) {
-            throw new ValidationError('Room could not be created');
-        }
+      return new ApiResponse("Room created successfully", newRoom);
+    },
+  );
 
-        return new ApiResponse('Room created successfully', newRoom);
+  static getRoomById = handleApiResponse(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const roomId = new Types.ObjectId(req.params.id);
 
+      if (!roomId) {
+        throw new ValidationError("You need to input a roomId");
+      }
 
+      const room = await RoomService.findRoomById(roomId);
 
-    });
+      if (!room) {
+        throw new NotFoundError("Room not found");
+      }
 
-    static getRoomById = handleApiResponse(async (req: Request, res: Response, next: NextFunction) => {
-        const roomId = new Types.ObjectId(req.params.id);
+      room.password = undefined;
+      return new ApiResponse("Room retrieved successfully", room);
+    },
+  );
 
-        if (!roomId) {
-            throw new ValidationError('You need to input a roomId');
-        }
+  static joinRoom = handleApiResponse(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const userId = new Types.ObjectId(req.userId);
+      const roomId = new Types.ObjectId(req.params.roomId);
+      const { password } = req.body;
 
-        const room = await RoomService.findRoomById(roomId);
+      const result = await RoomUserService.joinRoom(userId, roomId, password);
 
-        if (!room) {
-            throw new NotFoundError('Room not found');
-        }
+      if (!result) {
+        throw new ValidationError("Could not join room");
+      }
+      console.log("result", result);
+      return new ApiResponse("Joined room", result);
+    },
+  );
 
-        room.password = undefined;
-        return new ApiResponse('Room retrieved successfully', room);
+  static leaveRoom = handleApiResponse(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const userId = new Types.ObjectId(req.userId);
+      const roomId = new Types.ObjectId(req.params.roomId);
 
+      const result = await RoomUserService.leaveRoom(userId, roomId);
 
-    });
+      if (!result) {
+        throw new ValidationError("Could not leave room");
+      }
+      return new ApiResponse("Left room successfully", result);
+    },
+  );
 
-    static joinRoom = handleApiResponse(async (req: Request, res: Response, next: NextFunction) => {
-        const userId = new Types.ObjectId(req.userId);
-        const roomId = new Types.ObjectId(req.params.roomId);
-        const { password } = req.body;
+  static deleteRoom = handleApiResponse(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const userId = new Types.ObjectId(req.userId);
+      const roomId = new Types.ObjectId(req.params.roomId);
 
-        const result = await RoomUserService.joinRoom(userId, roomId, password);
+      const result = await RoomService.deleteRoom(userId, roomId);
 
-        if (!result) {
-            throw new ValidationError('Could not join room');
-        }
-        console.log('result', result);
-        return new ApiResponse('Joined room', result);
+      if (!result) {
+        throw new ValidationError("Could not delete room");
+      }
 
+      return new ApiResponse("Room deleted successfully!", result);
+    },
+  );
 
-    });
+  static updateRoom = handleApiResponse(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const userId = new Types.ObjectId(req.userId);
+      const roomId = new Types.ObjectId(req.params.roomId);
+      const updates = req.body;
 
-    static leaveRoom = handleApiResponse(async (req: Request, res: Response, next: NextFunction) => {
-        const userId = new Types.ObjectId(req.userId);
-        const roomId = new Types.ObjectId(req.params.roomId);
+      const result = await RoomService.updateRoom(userId, roomId, updates);
 
-        const result = await RoomUserService.leaveRoom(userId, roomId);
+      if (!result) {
+        throw new ValidationError("Could not update room");
+      }
 
-        if (!result) {
-            throw new ValidationError('Could not leave room');
-        }
-        return new ApiResponse('Left room successfully', result);
-
-
-    });
-
-    static deleteRoom = handleApiResponse(async (req: Request, res: Response, next: NextFunction) => {
-        const userId = new Types.ObjectId(req.userId);
-        const roomId = new Types.ObjectId(req.params.roomId);
-
-        const result = await RoomService.deleteRoom(userId, roomId);
-
-        if (!result) {
-            throw new ValidationError('Could not delete room');
-        }
-
-        return new ApiResponse('Room deleted successfully!', result);
-
-
-    });
-
-    static updateRoom = handleApiResponse(async (req: Request, res: Response, next: NextFunction) => {
-        const userId = new Types.ObjectId(req.userId);
-        const roomId = new Types.ObjectId(req.params.roomId);
-        const updates = req.body;
-
-        const result = await RoomService.updateRoom(userId, roomId, updates);
-
-        if (!result) {
-            throw new ValidationError('Could not update room');
-        }
-
-        return new ApiResponse('Room updated successfully', result);
-
-    });
-
+      return new ApiResponse("Room updated successfully", result);
+    },
+  );
 }
