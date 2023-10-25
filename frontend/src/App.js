@@ -20,17 +20,11 @@ import { loginUser } from './redux/user/userSlice';
 import CreateRoomPage from './pages/CreateRoomPage';
 import { ToastContainer } from 'react-toastify';
 import JoinRoomPage from './pages/JoinRoomPage';
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
-  
+import theme from './styles/theme';
 
 const App = () => {
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <ToastContainer />
       <Container maxWidth="lg">
         <Router>
