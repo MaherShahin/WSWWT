@@ -6,7 +6,7 @@ import {
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useApi } from '../../hooks/useApi';
+import { useRegister } from '../../hooks/useAuth';
 
 const SignUpForm= () => {
 
@@ -21,8 +21,7 @@ const SignUpForm= () => {
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
-    const { request } = useApi();
-
+    const { registerUser } = useRegister();
     const validateForm = () => {
         const newErrors = {};
 
@@ -53,11 +52,14 @@ const SignUpForm= () => {
 
         setLoading(true);
         try {
-            await request({
-                method: 'post',
-                url: SIGN_UP_ENDPOINT,
-                data: { email, password, name, username }
-            });
+            const userInfo = {
+                email,
+                password,
+                name,
+                username,
+            };
+
+            await registerUser(userInfo);
 
             toast.success('Successfully registered!');
             setTimeout(() => {

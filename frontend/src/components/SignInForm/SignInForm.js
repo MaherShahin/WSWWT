@@ -11,22 +11,19 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { Link, useNavigate } from 'react-router-dom';
+import { useLogin } from '../../hooks/useAuth';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../../redux/user/userSlice';
-import { useApi } from '../../hooks/useApi';
+import { loginAction } from '../../redux/user/userSlice';
 
 const SignInForm = () => {
 
-    const SIGN_IN_ENDPOINT = '/auth/login';
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
     const [errors, setErrors] = useState({});
-
-    const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { request } = useApi();
+    const dispatch = useDispatch();
+
+    const { handleLogin } = useLogin();
 
     const validateForm = () => {
         const newErrors = {};
@@ -40,6 +37,10 @@ const SignInForm = () => {
             newErrors.password = 'Password is required';
         }
 
+        if (password.length < 8) {
+            newErrors.password = 'Password must be at least 8 characters';
+        }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -49,27 +50,20 @@ const SignInForm = () => {
 
         if (!validateForm()) return;
 
-        const user = {
+        const userInfo = {
             email,
             password,
         };
 
         try {
-            const response = await request({
-                method: 'post',
-                url: SIGN_IN_ENDPOINT,
-                data: user,
-            });
-    
-            dispatch(loginUser(response.data));
-    
-            const redirectURL = sessionStorage.getItem('redirectAfterLogin') || '/';
-            sessionStorage.removeItem('redirectAfterLogin');   
-    
-            navigate(redirectURL);
+            const loginResponse = await handleLogin(userInfo);
+            if (!loginResponse) {
+                return [];
+            }
+            dispatch(loginAction(loginResponse));
+            navigate('/');
         } catch (error) {
             console.log(error);
-            setErrors({ password: error.response.data.errors[0].msg });
         }
 
     };
