@@ -1,16 +1,16 @@
 import { Router } from "express";
-import { UserController } from "../../controllers/userController";
-import authMiddleware from "../../middleware/authMiddleware";
 import { FriendController } from "../../controllers/friendController";
-
+import authMiddleware from "../../middleware/authMiddleware";
 
 const router: Router = Router();
 
-router.post('/acceptFriendRequest', authMiddleware, FriendController.acceptFriendRequest);
-router.post('/rejectFriendRequest', authMiddleware, FriendController.rejectFriendRequest);
-router.post('/removeFriend', authMiddleware, FriendController.removeFriend);
-router.post('/sendFriendRequest', authMiddleware, FriendController.sendFriendRequest);
-router.get('/getFriendRequests', authMiddleware, FriendController.getFriendRequests);
+router.use(authMiddleware);
+
+router.post('/acceptFriendRequest', FriendController.acceptFriendRequest);
+router.post('/rejectFriendRequest', FriendController.rejectFriendRequest);
+router.post('/removeFriend', FriendController.removeFriend);
+router.post('/sendFriendRequest', FriendController.sendFriendRequest);
+router.get('/getFriendRequests', FriendController.getFriendRequests);
   
 export default router;
 

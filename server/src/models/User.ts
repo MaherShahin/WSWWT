@@ -20,6 +20,9 @@ export type TUser = {
   addCreatedRoom(roomId: Types.ObjectId): void;
   getJoinedRooms(): Promise<TRoom[]>;
   getCreatedRooms(): Promise<TRoom[]>;
+  addFriend(friendId: Types.ObjectId): void;
+  removeFriend(friendId: Types.ObjectId): void;
+  getFriends(): Promise<TUser[]>;
 };
 
 export interface IUser extends TUser, Document {}
@@ -112,6 +115,19 @@ userSchema.methods.getJoinedRooms = async function() {
 userSchema.methods.getCreatedRooms = async function() {
   return Room.find({ _id: { $in: this.createdRooms } });
 }
+
+userSchema.methods.addFriend = function(friendId: Types.ObjectId) {
+  this.friends.push(friendId);
+}
+
+userSchema.methods.removeFriend = function(friendId: Types.ObjectId) {
+  this.friends = this.friends.filter((id: Types.ObjectId) => !id.equals(friendId));
+}
+
+userSchema.methods.getFriends = async function() {
+  return User.find({ _id: { $in: this.friends } });
+}
+
 
 const User = model<IUser>("User", userSchema);
 

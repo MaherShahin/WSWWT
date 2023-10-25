@@ -19,6 +19,8 @@ export type TRoom = {
   // Methods
   addUser(userId: Types.ObjectId): void;
   removeUser(userId: Types.ObjectId): void;
+  addSeries(seriesId: Types.ObjectId): void;
+  removeSeries(seriesId: Types.ObjectId): void;
 };
 
 
@@ -53,7 +55,10 @@ roomSchema.methods = {
   },
   addSeries(seriesId: Types.ObjectId) {
     this.currentSeries.push(seriesId);
-  }
+  },
+  removeSeries(seriesId: Types.ObjectId) {
+    this.currentSeries.pull(seriesId);
+  },
 };
 
 const Room = model<IRoom>("Room", roomSchema);

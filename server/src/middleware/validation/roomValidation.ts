@@ -27,7 +27,6 @@ export const validateCreateRoom = (req: Request, res: Response, next: NextFuncti
 };
 
 export const validateRoom = (room: IRoom): void => {
-  console.log('validateRoom');
   if (!room.name || room.name.length < 3 || room.name.length > 50) {
     throw new CustomError(400, RequestErrorCodes.VALIDATION_ERROR, 'Room name must be between 3 and 50 characters.');
   }

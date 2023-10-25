@@ -18,17 +18,17 @@ export class RoomService {
     roomType: RoomType,
     maxParticipants: number,
   }): Promise<IRoom> {
-      const room = new Room({ ...params, users: [params.roomAdmin] });
+      const room: IRoom = new Room({ ...params, users: [params.roomAdmin] });
       validateRoom(room);
       if (room.password) {
         room.password = await hashPassword(room.password);
       }
+
       const savedRoom = await room.save();
-  
       await UserService.addCreatedRoomToUser(params.roomAdmin, savedRoom._id);
       await UserService.addJoinedRoomToUser(params.roomAdmin, savedRoom._id);
-      console.log('savedRoom', savedRoom);
-      return room;
+      
+      return savedRoom;
   }
 
   static async findRoomById(roomId: Types.ObjectId): Promise<IRoom | null> {
