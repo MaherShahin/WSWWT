@@ -26,31 +26,9 @@ const darkTheme = createTheme({
     mode: 'dark',
   },
 });
+  
 
 const App = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const autoLogin = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const response = await axios.post('http://localhost:5000/api/auth/me', {}, {
-            headers: {
-              'x-auth-token': token,
-            },
-          });
-          const user = response.data;
-          dispatch(loginUser({user, token}));
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    };
-    autoLogin();
-  }, [dispatch]);
-
-
   return (
     <ThemeProvider theme={darkTheme}>
       <ToastContainer />
