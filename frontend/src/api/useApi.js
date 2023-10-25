@@ -1,7 +1,6 @@
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { apiRequest } from '../utils/apiUtil';
-import { toast } from 'react-toastify';
+import { apiRequest } from './apiUtil';
 
 export const useApi = () => {
     const navigate = useNavigate();
@@ -9,8 +8,9 @@ export const useApi = () => {
 
     const request = async (config) => {
         try {
-            const response = await apiRequest(config, token);
-            return response;
+            const request = await apiRequest(config, token);
+            console.log(request);
+            return request;
         } catch (error) {
             switch (error?.response?.status) {
                 case 404:
@@ -21,7 +21,6 @@ export const useApi = () => {
                     break;
                 default: 
                     console.error("Api hook error : " + error);
-                    navigate('/');
             }
             return error.response; 
         }
