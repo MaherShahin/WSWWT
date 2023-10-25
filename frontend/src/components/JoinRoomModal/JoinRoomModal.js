@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { useApi } from '../../hooks/useApi';
+import { useApi } from '../../api/useApi';
 import JoinRoomForm from '../JoinRoomForm/JoinRoomForm';
 
 const JoinRoomModal = () => {

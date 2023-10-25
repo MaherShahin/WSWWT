@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Box, Container, Typography } from '@mui/material';
 import RoomUsers from '../components/RoomUsers/RoomUsers';
-import { useApi } from '../hooks/useApi';  // Importing the API hook
+import { useApi } from '../api/useApi';  // Importing the API hook
 import ContentSection from '../components/ContentSection/ContentSection';
 import {useParams} from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentRoom } from '../redux/room/roomSlice';
+import {setCurrentRoomAction } from '../redux/room/roomSlice';
 import RoomInvitationModal from '../components/RoomInvitationModal/RoomInvitationModal';
 
 const Room = () => {
@@ -31,7 +31,7 @@ const Room = () => {
             });
 
             let room = response.data;
-            dispatch(setCurrentRoom(room));
+            dispatch(setCurrentRoomAction(room));
         }
         fetchRoom();
     }, []);

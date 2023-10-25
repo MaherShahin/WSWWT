@@ -4,9 +4,9 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import ShareIcon from '@mui/icons-material/Share';
 import { useNavigate } from 'react-router-dom';
 import './RoomBox.css';
-import { useApi } from '../../hooks/useApi';
+import { useApi } from '../../api/useApi';
 import { useDispatch } from 'react-redux';
-import { leaveRoom } from '../../redux/room/roomSlice';
+import { leaveRoomAction } from '../../redux/room/roomSlice';
 import RoomInvitationModal from '../RoomInvitationModal/RoomInvitationModal';
 
 
@@ -42,7 +42,7 @@ const RoomsBox = ({ room }) => {
         console.log('Failed to leave room');
       }
 
-      dispatch(leaveRoom(room));
+      dispatch(leaveRoomAction(room));
       console.log(response.data);
     } catch (error) {
       console.error(error);
