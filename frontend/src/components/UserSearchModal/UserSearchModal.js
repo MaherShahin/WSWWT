@@ -59,7 +59,10 @@ const UserSearchModal = () => {
         <>
             <Tooltip title="Add a Friend">
                 <IconButton color="secondary" onClick={handleOpen}>
-                    <InsertEmoticonOutlined fontSize="large" />
+                    <Box display="flex" flexDirection="column" alignItems="center">
+                        <InsertEmoticonOutlined fontSize="large" />
+                        <Typography variant="body1" marginTop={1} color={'white'}>Find Friends</Typography>
+                    </Box>
                 </IconButton>
             </Tooltip>
             <Modal open={open} onClose={handleClose}>
@@ -71,14 +74,18 @@ const UserSearchModal = () => {
                         transform: 'translate(-50%, -50%)',
                         width: 400,
                         bgcolor: 'background.paper',
-                        boxShadow: 24,
+                        boxShadow: 2,
                         p: 4,
+                        borderRadius: '50px',
                     }}
                 >
+                    <Typography variant="h5" gutterBottom color="textPrimary" align='center'>
+                        Find Friends
+                    </Typography>
                     <TextField
                         fullWidth
                         variant="outlined"
-                        placeholder="Search for friends..."
+                        placeholder="Enter the name or id of your friend"
                         onChange={(e) => handleSearch(e.target.value)}
                     />
                     <List>

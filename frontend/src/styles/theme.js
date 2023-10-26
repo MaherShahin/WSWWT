@@ -1,44 +1,36 @@
+// Updated theme.js
 import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#E50914',  // Netflix Red
-      contrastText: '#FFFFFF',
+      main: '#C69749',  // Brighter gold
+      contrastText: '#FFF',  // White text for better readability
     },
     secondary: {
-      main: '#B20710',  // Darkened Red for Hover effects or secondary emphasis
-      contrastText: '#f5f5f5',
+      main: '#735F32',  // Darker gold
+      contrastText: '#FFF',  // White text for better readability
     },
     background: {
-      default: '#000000',  // Deep black for background
-      paper: '#222222',  // Slightly lighter black for card backgrounds or modals
+      default: '#000000',  // Pure black background
+      paper: '#1C1E28',  // Slightly lighter than before, but still dark
     },
     text: {
-      primary: '#f5f5f5',  // Soft white
-      secondary: '#b3b3b3',  // Gray for secondary text or muted details
+      primary: '#C69749',  // Brighter gold
+      secondary: '#735F32',  // Darker gold
     },
   },
   typography: {
-    fontFamily: '"Helvetica Neue", Arial, sans-serif',  // Netflix uses Helvetica Neue predominantly
+    fontFamily: '"Roboto", sans-serif',
     h2: {
       fontWeight: 'bold',
       fontSize: '2.5em',
+      textShadow: '1px 1px 2px #1C1E28',
     },
     h6: {
-      fontFamily: '"Helvetica Neue", Arial, sans-serif',
+      fontFamily: '"Open Sans", sans-serif',
       fontSize: '1.2em',
       lineHeight: '1.4',
-    },
-  },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 4,  // Slightly rounded edges, not too much
-          textTransform: 'none',  // Netflix buttons usually avoid capitalized texts
-        },
-      },
     },
   },
 });

@@ -84,7 +84,6 @@ const CreateRoomForm = () => {
                         error={errors.roomName ? true : false}
                         helperText={errors.roomName}
                     />
-
                 </FormControl>
                 <FormControl>
                     <FormLabel component="legend">Description</FormLabel>

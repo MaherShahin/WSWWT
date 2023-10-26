@@ -4,6 +4,7 @@ import RoomsAccordion from '../RoomsAccordion/RoomsAccordion';
 import CreateRoomModal from '../CreateRoomModal/CreateRoomModal';
 import UserSearchModal from '../UserSearchModal/UserSearchModal';
 import { useFetchRooms } from '../../hooks/useRooms';
+import { TitleSearchBar } from '../TitleSearchBar/TitleSearchBar';
 
 
 const RoomsOverview = () => {
@@ -12,12 +13,12 @@ const RoomsOverview = () => {
 
     return (
         <Stack spacing={2} direction="column" marginTop={3} >
-            <Box display={'flex'} padding={3}>
-                <Box>
-                    <CreateRoomModal />
-                    <UserSearchModal />
-                </Box>
+            <Box display="flex" justifyContent="flex-end">
+                <CreateRoomModal />
+                <UserSearchModal />
             </Box>
+            <TitleSearchBar />
+
             <RoomsAccordion title="Created Rooms" rooms={createdRooms} />
             <RoomsAccordion title="Joined Rooms" rooms={joinedRooms} />
         </Stack>

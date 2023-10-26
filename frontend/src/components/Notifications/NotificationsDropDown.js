@@ -59,7 +59,7 @@ const NotificationsDropDown = () => {
   return (
     <>
       <Button onClick={handleOpen}>
-        <Notifications />
+        <Notifications style={{ color: 'white' }} />
       </Button>
       <Menu
         id="friend-requests-menu"
@@ -70,7 +70,7 @@ const NotificationsDropDown = () => {
         {loading && <MenuItem disabled={true}>Loading...</MenuItem>}
         {!loading && friendRequests.length === 0 && (
           <MenuItem disabled={true}>
-            <Typography>No new notifications</Typography>
+            <Typography >No new notifications</Typography>
           </MenuItem>
         )}
         {!loading && friendRequests.length > 0 && friendRequests.map((request) => (
