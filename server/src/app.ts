@@ -6,6 +6,7 @@ import authRouter from "./routes/api/auth";
 import userRouter from "./routes/api/user";
 import roomRouter from "./routes/api/room";
 import friendRouter from "./routes/api/friend";
+import titleRouter from "./routes/api/title";
 import { errorMiddleware } from "./middleware/errorMiddleware";
 
 const app = express();
@@ -28,6 +29,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/room", roomRouter);
 app.use("/api/friend", friendRouter);
+app.use("/api/title", titleRouter)
 app.use(errorMiddleware);
 
 export default app;
