@@ -8,29 +8,29 @@ import { ValidationError } from "../errors/ValidationError";
 export class TitleController {
   static search = handleApiResponse(
     async (req: Request, res: Response, next: NextFunction) => {
-
-        const { query } = req.body;  // Assuming you send the query in the request body
+      const { query } = req.body;
 
       if (!query) {
         throw new ValidationError("You need to provide a search query");
       }
 
       const results = await esClient.search({
-        index: 'movies',
+        index: "movies",
         body: {
           query: {
-            match: { primaryTitle: query }
-          }
-        }
+            match_phrase_prefix: { primaryTitle: query },
+        },
+      }
       });
+
 
       if (!results.hits || results.hits.total === 0) {
         return new ApiResponse("No movies found", []);
       }
-      console.log(results)
-      const titles = results.hits.hits.map((hit: any) => hit._source.primaryTitle);
+      const filteredTitles = results.hits.hits.filter((hit: any) => hit._source.startYear > 2000);
+      const titles = filteredTitles.map((title: any) => title._source.primaryTitle);
 
       return new ApiResponse("Movies retrieved successfully", titles);
-    },
+    }
   );
 }
