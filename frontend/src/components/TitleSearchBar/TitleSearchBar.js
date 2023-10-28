@@ -5,7 +5,7 @@ export const TitleSearchBar = () => {
   const [query, setQuery] = useState('');
   const [movies, setMovies] = useState([]);
   const { request } = useApi();
-  const DEBOUNCE_DELAY = 300;
+  const DEBOUNCE_DELAY_MS = 300;
 
   useEffect(() => {
     const handleDebouncedSearch = async () => {
@@ -15,6 +15,7 @@ export const TitleSearchBar = () => {
           url: `/title/search`,
           data: { query },
         });
+        console.log('response', response);
         setMovies(response.data);
       } catch (error) {
         console.error("Failed to fetch movies:", error);
@@ -25,10 +26,10 @@ export const TitleSearchBar = () => {
       if (query) {
         handleDebouncedSearch();
       }
-    }, DEBOUNCE_DELAY);
+    }, DEBOUNCE_DELAY_MS);
 
     return () => clearTimeout(timerId);
-  }, [query, request]);
+  }, [query]);
 
   return (
     <div>
@@ -42,8 +43,8 @@ export const TitleSearchBar = () => {
       </form>
       {movies && (
         <ul>
-          {movies.map((movie, index) => (
-            <li key={index}>{movie}</li>
+          {movies.map((movie) => (
+            <li key={movie.id}>{movie.title}</li>
           ))}
         </ul>
       )}
