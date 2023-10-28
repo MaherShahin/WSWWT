@@ -17,13 +17,14 @@ import { loginAction } from '../../redux/user/userSlice';
 
 const SignInForm = () => {
 
+
+    const { handleLogin, isLoading, error, data } = useLogin();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    const { handleLogin } = useLogin();
 
     const validateForm = () => {
         const newErrors = {};
@@ -45,7 +46,7 @@ const SignInForm = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
 
         if (!validateForm()) return;
@@ -55,16 +56,13 @@ const SignInForm = () => {
             password,
         };
 
-        try {
-            const loginResponse = await handleLogin(userInfo);
-            if (!loginResponse) {
-                return [];
+        handleLogin(userInfo, {
+            onSuccess: (data) => {
+                const user = data.getData();
+                dispatch(loginAction(user));
+                navigate('/');
             }
-            dispatch(loginAction(loginResponse));
-            navigate('/');
-        } catch (error) {
-            console.log(error);
-        }
+        });
 
     };
 

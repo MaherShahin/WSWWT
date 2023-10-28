@@ -3,27 +3,18 @@ import {
     loginUser, registerUser
 } from '../services/authService';
 
+import { useMutation } from 'react-query';
+
 export const useLogin = () => {
     const { request } = useApi();
-    const handleLogin = async (userInfo) => {
-        try {
-            const res = await loginUser(request, userInfo);
-            console.log(res);
-            const user = res.getData();
-            
-            if (!user) {
-                console.log('Error logging in user');
-                return [];
-            }
+    const loginMutation = useMutation((userInfo) => loginUser(request, userInfo));
 
-            return user;
-        } catch (e) {
-            throw e;
-        }
-    }
-
-    return { handleLogin };
+    return {
+        ...loginMutation,
+        handleLogin: loginMutation.mutate,
+    };
 }
+
 
 export const useRegister = () => {
     const { request } = useApi();
