@@ -18,6 +18,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
 import { logoutAction } from '../../redux/user/userSlice';
 import NotificationsDropDown from '../Notifications/NotificationsDropDown';
+import { TitleSearchBar } from '../TitleSearchBar/TitleSearchBar';
 
 const settings = [
   { name: 'Profile', href: '/profile' },
@@ -25,7 +26,6 @@ const settings = [
   { name: 'Notifications', href: '/notifications'},
   { name: 'Logout', href: '/' },
 ];
-
 
 const ResponsiveAppBar = () => {
 
@@ -118,6 +118,7 @@ const ResponsiveAppBar = () => {
 
           {user ? (
             <>
+            <TitleSearchBar />
             <NotificationsDropDown />
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">

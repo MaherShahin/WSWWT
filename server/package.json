@@ -12,7 +12,8 @@
     "server": "concurrently \"npm run watch-tsc\" \"npm run watch-deploy\"",
     "start": "npm run deploy",
     "heroku-postbuild": "npm run tsc",
-    "test": "jest --silent --no-cache --detectOpenHandles"
+    "test": "jest --silent --no-cache --detectOpenHandles",
+    "index-imdb": "ts-node server/imdbDataParser/index.ts"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^8.10.0",
@@ -31,6 +32,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb-memory-server": "^8.15.1",
     "mongoose": "^6.12.0",
+    "node-fetch": "^2.6.6",
     "papaparse": "^5.4.1",
     "reflect-metadata": "^0.1.13",
     "request": "^2.88.2",
@@ -48,9 +50,9 @@
     "@types/gravatar": "^1.8.3",
     "@types/jest": "^29.5.4",
     "@types/jsonwebtoken": "^8.5.9",
-    "@types/mocha": "^10.0.1",
     "@types/mongodb": "^4.0.7",
     "@types/mongoose": "^5.11.97",
+    "@types/node-fetch": "^2.6.7",
     "@types/papaparse": "^5.3.10",
     "@types/supertest": "^2.0.12",
     "babel-cli": "^6.26.0",
@@ -58,7 +60,6 @@
     "chai": "^4.3.8",
     "concurrently": "^7.4.0",
     "jest": "^29.6.4",
-    "mocha": "^10.2.0",
     "nodemon": "^2.0.20",
     "superagent": "^8.1.2",
     "supertest": "^6.3.3",
