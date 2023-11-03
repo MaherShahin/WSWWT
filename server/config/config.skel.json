@@ -1,0 +1,12 @@
+{
+    "mongoURI": "YOUR_MONGO_URI_HERE",
+    "jwtSecret": "YOUR_JWT_SECRET_HERE",
+    "jwtExpiration": 360000,
+    "refreshTokenExpiration": 360000,
+    "refreshToken": "YOUR_REFRESH_TOKEN_SECRET_HERE",
+    "TMDB_TOKEN": "YOUR_TMDB_TOKEN_HERE",
+    "elasticsearch": {
+      "host": "http://wswwt-elasticsearch-1:9200" 
+    }
+  }
+  
