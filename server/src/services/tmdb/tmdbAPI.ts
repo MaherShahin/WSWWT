@@ -1,6 +1,6 @@
-import { CustomError } from "../errors/CustomError";
+import { CustomError } from "../../errors/CustomError";
 import fetch from "node-fetch";
-import { TMDBApiErrorCodes } from "../constants/ErrorCodes";
+import { TMDBApiErrorCodes } from "../../constants/ErrorCodes";
 import config from 'config'
 
 class TMDBApi {

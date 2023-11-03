@@ -1,6 +1,6 @@
 import fs from 'fs';
 import Papa from 'papaparse';
-import client from '../src/elastic/client'; 
+import client from '../src/services/elastic/elasticClient'; 
 
 const PATH_TO_IMDB_DATA = './imdb_datasets/title.basics.tsv';
 

@@ -1,6 +1,6 @@
 import { DatabaseError } from "../errors/DatabaseError";
-import esClient from "../elastic/client";
-import TMDBApi from "../tmdb/tmdbAPI";
+import esClient from "./elastic/elasticClient";
+import TMDBApi from "./tmdb/tmdbAPI";
 
 export class TitleService {
   static async getTopHits(query: any) {

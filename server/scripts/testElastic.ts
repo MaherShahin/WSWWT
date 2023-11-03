@@ -1,4 +1,4 @@
-import esClient from "../src/elastic/client";
+import esClient from "../src/services/elastic/elasticClient";
 
 async function searchMovies(query: string) {
     const results = await esClient.search({
