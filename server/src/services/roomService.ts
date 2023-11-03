@@ -39,7 +39,7 @@ export class RoomService {
   static async updateRoom(
     userId: Types.ObjectId,
     roomId: Types.ObjectId,
-    updates: Partial<IRoom>,
+    updates: Partial<IRoom>
   ): Promise<IRoom | null> {
     const room = await this.findRoomById(roomId);
 
@@ -54,7 +54,7 @@ export class RoomService {
           400,
           RequestErrorCodes.INVALID_INPUT,
           "Password must be between 6 and 50 characters",
-          null,
+          null
         );
       }
       updates.password = await hashPassword(updates.password);
@@ -67,7 +67,7 @@ export class RoomService {
 
   static async deleteRoom(
     userId: Types.ObjectId,
-    roomId: Types.ObjectId,
+    roomId: Types.ObjectId
   ): Promise<IRoom | null> {
     const room = await this.findRoomById(roomId);
     if (!room) throw new NotFoundError("Room not found");
@@ -78,7 +78,7 @@ export class RoomService {
 
   static async addUserToRoom(
     roomId: Types.ObjectId,
-    userId: Types.ObjectId,
+    userId: Types.ObjectId
   ): Promise<IRoom | null> {
     const room = await this.findRoomById(roomId);
     if (!room) throw new NotFoundError("Room not found");
@@ -89,11 +89,76 @@ export class RoomService {
 
   static async removeUserFromRoom(
     roomId: Types.ObjectId,
-    userId: Types.ObjectId,
+    userId: Types.ObjectId
   ): Promise<IRoom | null> {
     const room = await this.findRoomById(roomId);
     if (!room) throw new NotFoundError("Room not found");
     room.removeUser(userId);
+    validateRoom(room);
+    return room.save();
+  }
+
+  static async addTitleToRoom(
+    roomId: Types.ObjectId,
+    title: any
+  ): Promise<IRoom | null> {
+    const room = await this.findRoomById(roomId);
+    if (!room) throw new NotFoundError("Room not found");
+    if (
+      room.currentTitles.some((existingTitle) => existingTitle.id === title.id)
+    ) {
+      throw new CustomError(
+        400,
+        RequestErrorCodes.INVALID_INPUT,
+        "Title already exists in room",
+        null
+      );
+    }
+
+    console.log("title in service", title);
+
+    room.addTitle(title);
+
+    console.log("room in service", room);
+
+    validateRoom(room);
+    return room.save();
+  }
+
+  static async removeTitleFromRoom(
+    roomId: Types.ObjectId,
+    title: any
+  ): Promise<IRoom | null> {
+    const room = await this.findRoomById(roomId);
+
+    if (!room) throw new NotFoundError("Room not found");
+
+    var titleExists = room.currentTitles.some(
+      (existingTitleId) => existingTitleId.id === title.id
+    );
+
+    console.log("titleExists", titleExists);
+    if (!titleExists) {
+      throw new CustomError(
+        400,
+        RequestErrorCodes.INVALID_INPUT,
+        "Title does not exist in room",
+        null
+      );
+    }
+
+
+    try {
+      room.removeTitle(title.id);
+    } catch (error) {
+      throw new CustomError(
+        400,
+        RequestErrorCodes.INVALID_INPUT,
+        "TiErreaom",
+        null
+      );
+    }
+
     validateRoom(room);
     return room.save();
   }

@@ -10,7 +10,7 @@ export type TRoom = {
   name: string;
   description: string;
   users: Types.ObjectId[];
-  currentSeries: string[];
+  currentTitles: any[]; 
   password?: string;
   roomAdmin: Types.ObjectId;
   roomType: RoomType;
@@ -19,8 +19,8 @@ export type TRoom = {
   // Methods
   addUser(userId: Types.ObjectId): void;
   removeUser(userId: Types.ObjectId): void;
-  addSeries(seriesId: Types.ObjectId): void;
-  removeSeries(seriesId: Types.ObjectId): void;
+  addTitle(title: any): void;
+  removeTitle(titleId: number): void; 
 };
 
 export interface IRoom extends TRoom, Document {}
@@ -29,7 +29,7 @@ const roomSchema: Schema = new Schema({
   name: { type: String, required: true },
   description: { type: String },
   users: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  currentSeries: [{ type: String }],
+  currentTitles: [{ type: Schema.Types.Mixed }],
   password: { type: String, required: false },
   roomAdmin: { type: Schema.Types.ObjectId, ref: "User", required: true },
   roomType: { type: String, enum: Object.values(RoomType), required: true },
@@ -52,11 +52,12 @@ roomSchema.methods = {
   removeUser(userId: Types.ObjectId) {
     this.users.pull(userId);
   },
-  addSeries(seriesId: Types.ObjectId) {
-    this.currentSeries.push(seriesId);
+  addTitle(title: any) {
+    this.currentTitles.push(title);
   },
-  removeSeries(seriesId: Types.ObjectId) {
-    this.currentSeries.pull(seriesId);
+  removeTitle(titleId: number) {
+    const index = this.currentTitles.findIndex((t: { id: number; }) => t.id === titleId);
+    if (index !== -1) this.currentTitles.splice(index, 1);
   },
 };
 

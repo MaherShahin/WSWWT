@@ -13,4 +13,7 @@ router.post("/leave/:roomId", RoomController.leaveRoom);
 router.delete("/delete/:roomId", RoomController.deleteRoom);
 router.put("/update/:roomId", RoomController.updateRoom);
 
+router.post("/addTitle/:roomId", RoomController.addTitle);
+router.delete("/removeTitle/:roomId", RoomController.removeTitle);
+
 export default router;

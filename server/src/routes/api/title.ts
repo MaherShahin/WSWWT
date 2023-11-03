@@ -8,4 +8,6 @@ router.use(authMiddleware);
 
 router.post("/search", TitleController.search);
 
+router.get("/get/:id", TitleController.getTitle);
+router.post("/search-titles", TitleController.searchTitles)
 export default router;
