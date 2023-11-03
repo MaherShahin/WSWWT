@@ -21,6 +21,7 @@ import CreateRoomPage from './pages/CreateRoomPage';
 import { ToastContainer } from 'react-toastify';
 import JoinRoomPage from './pages/JoinRoomPage';
 import theme from './styles/theme';
+import { SearchTitlePage } from './pages/SearchTitlePage';
 
 const App = () => {
   return (
@@ -38,6 +39,7 @@ const App = () => {
             <Route path="*" element={<NotFoundPage />} />
             <Route path="/create-room" element={<CreateRoomPage />} />
             <Route path="/join-room/:roomId" element={<JoinRoomPage />} />
+            <Route path="/title-search" element={<SearchTitlePage />} />
           </Routes>
         </Router>
       </Container>

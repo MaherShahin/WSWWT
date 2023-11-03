@@ -1,0 +1,27 @@
+.navbar-search {
+  background-color: #ffffff;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 250px;
+  padding: 5px 10px;
+}
+
+.navbar-search input[type="text"] {
+  background-color: transparent;
+  border: none;
+  width: 100%;
+  outline: none;
+}
+
+.search-results {
+  position: absolute;
+  top: 100%;
+  max-height: 300px;
+  width: 280px;
+  z-index: 1000;
+  overflow: auto;
+  background-color: #323232;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}

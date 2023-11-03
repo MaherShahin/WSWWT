@@ -1,0 +1,43 @@
+.CardContent {
+    position: relative;
+    overflow: hidden;
+}
+
+.overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.overlay > .title {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+
+.overlay > .delete-btn {
+    position: absolute;
+    color: red;
+    top: 10px;
+    right: 10px;
+}
+
+.delete-btn:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.CardContent:hover .overlay {
+    display: flex;
+}
+
+.CardContent:hover img {
+    filter: brightness(0.5);
+}
