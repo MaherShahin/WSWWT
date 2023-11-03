@@ -1,19 +1,15 @@
 import React from 'react';
-import { Grid, Card, CardContent, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 import './ContentSection.css'
+import TitleCard from '../TitleCard/TitleCard';
 
-const ContentSection = ({ contentItems }) => {
+const ContentSection = ({ contentItems, onDelete }) => {
+
     return (
         <Grid container spacing={3} style={{ padding: '20px' }}>
             {contentItems.map((item, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h6">
-                                {item.title}
-                            </Typography>
-                        </CardContent>
-                    </Card>
+                    <TitleCard title={item} onOpenDeleteModal={onDelete} isOwner={true} />
                 </Grid>
             ))}
         </Grid>
