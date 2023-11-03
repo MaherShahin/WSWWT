@@ -1,191 +1,181 @@
-# Mongoose Node.js Express TypeScript application boilerplate with best practices for API development.
+# WSWWT Server
 
-![image](https://user-images.githubusercontent.com/10678997/57565876-01281b00-73f8-11e9-8d86-911faa4a6c0f.png)
+![Node.js](https://img.shields.io/badge/Node.js-%5E16.13.1-68A063)
+![Express.js](https://img.shields.io/badge/Express.js-%5E4.17.1-000000)
+![TypeScript](https://img.shields.io/badge/TypeScript-%5E4.8.4-3178C6)
+![MongoDB](https://img.shields.io/badge/MongoDB-%5E6.12.0-47A248)
+![Elasticsearch](https://img.shields.io/badge/Elasticsearch-%5E8.10.0-005571)
+![Jest](https://img.shields.io/badge/Jest-%5E29.6.4-C21325)
+![Mongoose](https://img.shields.io/badge/Mongoose-%5E6.12.0-880)
+![Build Status](https://img.shields.io/badge/Build-Passing-4BC51D)
 
-The main purpose of this repository is to show a good end-to-end project setup and workflow for writing a strongly-typed [Mongoose](https://mongoosejs.com/) [Node.js](https://nodejs.org/en/) [Express](https://expressjs.com/) code in [TypeScript](https://www.typescriptlang.org/) complete with middleware, models, routes, and types.
+### Table of Contents
+- [Getting Started](#getting-started)
+  - [Configuration Setup](#configuration-setup)
+  - [Running the Server](#running-the-server)
+- [Technologies Used](#technologies-used)
+- [Project Structure](#project-structure)
+- [Coding Conventions](#coding-conventions)
+  - [Route Structure](#route-structure)
+  - [Controller Methods](#controller-methods)
+  - [Response Classes](#response-classes)
+  - [Error Handling](#error-handling)
+- [IMDb Data Indexing and Elasticsearch Structure](#imdb-data-indexing-and-elasticsearch-structure)
 
-This example comes with a complete REST API to handle Authentication and CRUD features on Users and their corresponding Profile. You may view the API documentation on the [Wiki](https://github.com/polcham/mongoose-express-ts/wiki).
 
-# Why TypeScript?
 
-While it's true that developing applications on an Untyped language such as **JavaScript**, is easier to learn and is faster to develop, it will undeniably get harder and harder to grasp as the application grows in scale. This in turn, leads to more run-time errors consuming more development hours, as the team gets accustomed to the growing codebase. And this is what this boilerplate hopes to achieve. By using the **TypeScript** standard, you'll have better team and code stability with **Interface Oriented Development**, leading to better standardized codes. TypeScript allows developers to focus more on exposed Interfaces or API, rather than having to know all the code by heart. This makes the codebase easier to maintain with big teams, especially if those teams are composed of developers of different skill levels.
+# Getting Started
 
-# Why Mongoose?
+To get started with this project, follow the steps below:
 
-[Mongoose](https://mongoosejs.com/) is an object document modeling (ODM) layer that sits on top of Node's MongoDB driver. If you are coming from SQL, it is similar to object relational mapping (ORM) for a relational database. While it is not required to use Mongoose with MongoDB, it is generally a good idea for various reasons. Since MongoDB is a denormalized NoSQL database, its inherently schema-less design means documents will have varying sets of fields with different data types. This provides your data model with as much flexibility as you wanted over time, however, it can be difficult to cope with coming from a SQL background. Mongoose defines a schema for your data models so your documents follow a specific structure with pre-defined data types. On top of that, Mongoose provides built-in type casting, validation, query building, and business logic hooks out-of-the-box which saves developers the pain of writing boilerplates for MongoDB.
+## Configuration Setup
 
-# Prerequisites
+1. Locate the `config` folder in your project's root directory.
+2. Inside the `config` folder, you'll find a file named `config.skel.json`. Make a copy of this file and rename it to `config.json`.
 
-To build and run this app locally you will need a few things:
+   ```bash
+   cp config/config.skel.json config/config.json
+   ```
+3. Open the newly created config.json file and fill in the required configuration values for your project, such as API keys for the TMDB API, MongoDB database URLs, and any other environment-specific settings.
 
-- Install [Node.js](https://nodejs.org/en/)
-- Install [VS Code](https://code.visualstudio.com/)
-- You will need a **MongoDB server** which could either be hosted locally or online.
-- Once you know your MongoDB URI, set the value of **mongoURI** in **config/default.json**.
-
-# Getting started
-
-- Clone the repository
-
-```
-git clone --depth=1 https://github.com/polcham/mongoose-express-ts.git <project_name>
-```
-
-- Install dependencies
-
-```
-cd <project_name>
-npm install
-npm run tsc
-```
-
-- Build and run the project with auto reload (nodemon)
-
-```
-npm run server
+## Running the server
+```bash
+  npm run server
 ```
 
-- Build and run the project
+For detailed deployment instructions, refer to the README in the higher-level directory that contains both the server and the frontend.
 
-```
-npm run start
-```
+# Project Structure
 
-Finally, navigate to `http://localhost:5000/` and you should see the API running!
+The project follows a structured directory layout to enhance maintainability and code organization. Here's a brief overview of the main high-level directories:
 
-## Project Structure
+- **`constants`**: Contains error codes and other constants used throughout the project.
 
-The most obvious difference in a TypeScript + Node project is the folder structure. In a TypeScript project, it's best to have separate _source_ and _distributable_ files. TypeScript (`.ts`) files live in your `src` folder and after compilation are output as JavaScript (`.js`) in the `dist` folder.
+- **`controllers`**: Contains controller classes responsible for handling various API endpoints. More information about how the controller methods should be created is provided later.
 
-The full folder structure of this app is explained below:
+- **`errors`**: Contains custom error classes that help in providing meaningful error messages and handling various error scenarios more effectively.
 
-> **Note!** Make sure you have already built the app using `npm run start`
+- **`middleware`**: Houses middleware modules responsible for request and response processing. Global middlewares include the error handling middleware. Also contains some of the validation middleware
 
-| Name               | Description                                                                                                                                                   |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **config**         | Contains config environment to be used by the config package, such as MongoDB URI, jwtSecret, and etc.                                                        |
-| **dist**           | Contains the distributable (or output) from your TypeScript build                                                                                             |
-| **node_modules**   | Contains all your npm dependencies                                                                                                                            |
-| **REST**           | Contains all API requests to test the routes, used with [REST Client VSCode extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) |
-| **src**            | Contains your source code that will be compiled to the dist dir                                                                                               |
-| **src/middleware** | Contains the middlewares to intercept requests                                                                                                                |
-| **src/models**     | Models define Mongoose schemas that will be used in storing and retrieving data from MongoDB                                                                  |
-| **src/routes**     | Routes define the endpoints of your API                                                                                                                       |
-| **src/types**      | Contains all your custom types to better handle type checking with TypeScript                                                                                 |
-| **src/server.ts**  | Entry point to your express app                                                                                                                               |
-| package.json       | File that contains npm dependencies as well as [build scripts](#what-if-a-library-isnt-on-definitelytyped)                                                    |
-| tsconfig.json      | Config settings for compiling server code written in TypeScript                                                                                               |
-| tslint.json        | Config settings for TSLint code style checking                                                                                                                |
+- **`models`**: Defines the models used in the application. 
 
-### Configuring TypeScript compilation
+- **`routes`**: Route definitions for the API
 
-TypeScript uses the file `tsconfig.json` to adjust project compile options.
-Let's dissect this project's `tsconfig.json`, starting with the `compilerOptions` which details how your project is compiled.
+- **`services`**: Service classes to implement the business logic. Also includes the tmdb folder which encapsulates all logic related to requests done to the tmdb api, as well as the elastic folder which contains the logic related to the elasticsearch client.
 
-```json
-    "compilerOptions": {
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "target": "es6",
-    "noImplicitAny": true,
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "*": ["node_modules/*", "src/types/*"]
-    }
-  }
-```
 
-| `compilerOptions`            | Description                                                                                                                                                |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `"module": "commonjs"`       | The **output** module type (in your `.js` files). Node uses commonjs, so that is what we use                                                               |
-| `"esModuleInterop": true,`   | Allows usage of an alternate module import syntax: `import foo from 'foo';`                                                                                |
-| `"target": "es6"`            | The output language level. Node supports ES6, so we can target that here                                                                                   |
-| `"noImplicitAny": true`      | Enables a stricter setting which throws errors when something has a default `any` value                                                                    |
-| `"moduleResolution": "node"` | TypeScript attempts to mimic Node's module resolution strategy. Read more [here](https://www.typescriptlang.org/docs/handbook/module-resolution.html#node) |
-| `"sourceMap": true`          | We want source maps to be output along side our JavaScript. See the [debugging](#debugging) section                                                        |
-| `"outDir": "dist"`           | Location to output `.js` files after compilation                                                                                                           |
-| `"baseUrl": "."`             | Part of configuring module resolution. See [path mapping section](#installing-dts-files-from-definitelytyped)                                              |
-| `paths: {...}`               | Part of configuring module resolution. See [path mapping section](#installing-dts-files-from-definitelytyped)                                              |
+- **`types`**: Defines TypeScript type definitions used throughout the project. e.g. the common ApiResponse, ApiErrorResponse classes which ensure a standard response structure throughout the backend 
 
-The rest of the file define the TypeScript project context.
-The project context is basically a set of options that determine which files are compiled when the compiler is invoked with a specific `tsconfig.json`.
-In this case, we use the following to define our project context:
+- **`utils`**: Contains utility functions that are used across the project. E.g. encryption utilities, as well as some api related wrapper functions
 
-```json
-    "include": [
-        "src/**/*"
-    ]
+
+# Coding Conventions
+
+This project follows a set of coding conventions to maintain consistency and improve code quality. Most importantly, the section with the api response classes and the wrapper function ensures consistency throughout the api and makes it significantly easier for the client to handle all responses, successful or not.
+
+## Route Structure
+
+Routes in this project are organized to ensure clarity and enforce security. The positioning of the `authMiddleware` middleware determines whether routes are protected or unprotected.
+
+Example route structure:
+```javascript
+import { Router } from "express";
+import { UserController } from "../../controllers/userController";
+import authMiddleware from "../../middleware/authMiddleware";
+
+const router = Router();
+
+// Unprotected routes
+router.get("/find/:id", UserController.getUserById);
+
+// Use authMiddleware to protect subsequent routes
+router.use(authMiddleware);
+
+// Protected routes
+router.get("/rooms", UserController.getUserRooms);
+router.put("/update", UserController.update);
+router.delete("/delete", UserController.delete);
+router.get("/search", UserController.searchUsers);
+
+export default router;
 ```
 
-`include` takes an array of glob patterns of files to include in the compilation. This project is fairly simple and all of our .ts files are under the `src` folder.
 
-### Running the build
+## Controller Methods
+All controller methods in this project are expected to be static and wrapped with the handleApiResponse wrapper function. This wrapper function ensures that methods return an object of the type ApiResponse.
 
-All the different build steps are orchestrated via [npm scripts](https://docs.npmjs.com/misc/scripts).
-Npm scripts basically allow us to call (and chain) terminal commands via npm.
-This is nice because most JavaScript tools have easy to use command line utilities allowing us to not need grunt or gulp to manage our builds.
-If you open `package.json`, you will see a `scripts` section with all the different scripts you can call.
-To call a script, simply run `npm run <script-name>` from the command line.
-You'll notice that npm scripts can call each other which makes it easy to compose complex builds out of simple individual build scripts.
-Below is a list of all the scripts this template has available:
+Example controller method:
+```javascript
+class UserController {
+  static addTitle = handleApiResponse(async (req, res, next) => {
+    // ... your controller logic ...
+    return new ApiResponse("Title added successfully", result);
+  });
+}
+```
 
-| Npm Script     | Description                                                                                   |
-| -------------- | --------------------------------------------------------------------------------------------- |
-| `tsc`          | Transpiles TypeScript codes to JavaScript.                                                    |
-| `watch-tsc`    | Transpiles TypeScript codes to JavaScript, with auto reload.                                  |
-| `deploy`       | Runs node on `dist/server.js` which is the app's entry point.                                 |
-| `watch-deploy` | Runs node on `dist/server.js` which is the app's entry point, with auto reload.               |
-| `server`       | Transpiles TypeScript codes to JavaScript then run node on `dist/server.js` with auto reload. |
-| `start`        | Transpiles TypeScript codes to JavaScript then run node on `dist/server.js`.                  |
+The handleApiResponse wrapper simplifies error handling and ensures consistent responses. This convention is strictly followed for all controller methods.
 
-Since we're developing with TypeScript, it is important for the codes to be transpiled first to JavaScript before running the node server. It is best to deploy the app using: `npm run server` or `npm run start` command.
+## Response Classes
 
-### VSCode Extensions
+In this project, we use custom response classes to standardize the structure of API responses. These classes simplify the process of sending responses and error messages to clients.
 
-To enhance your development experience while working in VSCode, I provided you with a list of suggested extensions while working on this project:
+### `ApiResponse`
 
-- [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
-- [Version Lens](https://marketplace.visualstudio.com/items?itemName=pflannery.vscode-versionlens)
-- [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-- [indent-rainbow](https://marketplace.visualstudio.com/items?itemName=oderwat.indent-rainbow)
-- [Material Icon Theme](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme)
+The `ApiResponse` class is used for successful responses in your application. It provides a consistent format for delivering success messages and data to clients. All controller methods are expected to return an instance of `ApiResponse`.
 
-# Dependencies
+The ApiResponse class takes the following parameters:
 
-Dependencies are managed through `package.json`.
-In that file you'll find two sections:
+- message (string): A descriptive message for the response.
+- payload (T): Data to be included in the response.
+- status (number): HTTP status code (default is 200).
+- errors (any): Error information (default is null). // Handled by error middleware
 
-## `dependencies`
 
-| Package           | Description                                     |
-| ----------------- | ----------------------------------------------- |
-| bcryptjs          | Library for hashing and salting user passwords. |
-| config            | Universal configurations for your app.          |
-| express           | Node.js web framework.                          |
-| express-validator | Easy form validation for Express.               |
-| gravatar          | Generate Gravatar URLs based on gravatar specs. |
-| http-status-codes | HTTP status codes constants.                    |
-| jsonwebtoken      | JsonWebToken implementation for Node.js.        |
-| mongoose          | MongoDB modeling tool in an async environment.  |
-| request           | Simplified HTTP client for Node.js.             |
-| typescript        | Typed superset of JavaScript.                   |
+### `ApiErrorResponse`
+The ApiErrorResponse class is used to handle errors and send standardized error responses. It is primarily used in the error middleware to handle errors thrown throughout the application.
 
-## `devDependencies`
 
-Since TypeScript is used, dependencies should be accompanied with their corresponding DefinitelyTyped @types package.
+## Error handling
 
-| Package             | Description                             |
-| ------------------- | --------------------------------------- |
-| @types/bcryptjs     | DefinitelyTyped for bcryptjs            |
-| @types/config       | DefinitelyTyped for config              |
-| @types/express      | DefinitelyTyped for express             |
-| @types/gravatar     | DefinitelyTyped for gravatar            |
-| @types/jsonwebtoken | DefinitelyTyped for jsonwebtoken        |
-| @types/mongoose     | DefinitelyTyped for mongoose            |
-| concurrently        | Run multiple commands concurrently      |
-| nodemon             | Reload node application on code changes |
+The error handling system in this project is designed to catch and handle errors that extend the base type CustomError.
 
-To install or update these dependencies you can use `npm install` or `npm update`.
+To ensure consistent error responses, make sure that any custom error types in your project extend the CustomError base class. It will handle creating the ApiErrorResponse by itself and sending it to the client.
+
+For more information, check the error middleware in the middleware directory
+
+# IMDb Data Indexing and Elasticsearch Structure
+Some scripts that are mostly related to the initalization and testing of the elasticsearch instance and indexing, those are contained inside the scripts directory
+
+### Off-The-Shelf IMDb Data Parsing
+
+The WSWWT project leverages the vast IMDb dataset to create an Elasticsearch index. To achieve this, we have a dedicated script, `imdbDataParser.ts`, that efficiently reads and indexes the IMDb dataset into our Elasticsearch instance.
+
+Here's a high-level overview:
+
+1. The script uses the `papaparse` library to read and parse the `title.basics.tsv` dataset from IMDb.
+2. As the dataset is large, the script processes the data in batches (defined by `BATCH_SIZE`, which is set to 5000).
+3. Each movie title is indexed into Elasticsearch under the index named `movies`.
+
+### Elasticsearch Index Structure
+
+When you run the project, the IMDb data is indexed with the following fields:
+
+- `tconst`: Alphanumeric unique identifier of the title.
+- `titleType`: The type/format of the title (e.g. movie, short, tvseries, etc.).
+- `primaryTitle`: The more popular title or the title used by the filmmakers on promotional materials at release.
+- `originalTitle`: The original title in its original language.
+- `isAdult`: Boolean indicating if the title is for adults (1 for adult titles, 0 otherwise).
+- `startYear`: Release year of the title or the start year for TV series.
+- `endYear`: End year for TV series; ‘\N’ for all other title types.
+- `runtimeMinutes`: Primary runtime of the title in minutes.
+- `genres`: Array that includes up to three genres associated with the title.
+
+### Testing Elasticsearch Health and Verifying Index
+
+You can quickly check the health of the Elasticsearch instance and verify if the `movies` index exists:
+
+**Elasticsearch Health**: Navigate to `http://localhost:9200/_cluster/health` in your browser or use a tool like `curl`:
+```bash
+   curl http://localhost:9200/_cluster/health
+```  
