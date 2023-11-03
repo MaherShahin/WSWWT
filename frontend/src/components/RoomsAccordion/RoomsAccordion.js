@@ -1,5 +1,5 @@
 import React from 'react';
-import { Accordion, AccordionSummary, AccordionDetails, List, ListItem, Typography } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import RoomBox from '../RoomBox/RoomBox';
 import { Grid } from '@mui/material';
@@ -13,7 +13,7 @@ const RoomAccordion = ({ title, rooms }) => {
             <AccordionDetails>
                 <Grid container spacing={2}>
                     {rooms.map((room, index) => (
-                        <Grid item xs={24} sm={12} md={8} lg={4} key={index}>
+                        <Grid item xs={12} sm={6} key={index}>
                             <RoomBox room={room} />
                         </Grid>
                     ))}
