@@ -1,10 +1,12 @@
-# WSWWT IMDb Project
+# WSWWT Project
 
-The WSWWT IMDb Project is more than just a movie title search platform. It's a collaborative tool designed to simplify the decision-making process and enhance your movie and series watching experience. With a frontend built using React (JavaScript), a backend server for data processing, and Elasticsearch for efficient data storage and search, it ensures a seamless experience for movie enthusiasts.
+What should we watch tonight?
+
+The WSWWT Project is more than just a movie title search platform. It's a collaborative tool designed to simplify the decision-making process and enhance your movie and series watching experience. With a frontend built using React (JavaScript), a backend server for data processing, and Elasticsearch for efficient data storage and search, it ensures a seamless experience for movie enthusiasts.
 
 ## Introduction
 
-Tired of endless debates with your flatmates about what to watch? The WSWWT IMDb Project is here to save the day! This app is all about making your movie and series selection process easier and more enjoyable. Here's what you can do:
+Tired of endless debates with your flatmates about what to watch? The WSWWT Project is here to save the day! This app is all about making your movie and series selection process easier and more enjoyable. Here's what you can do:
 
 ### Key Features
 
@@ -13,17 +15,6 @@ Tired of endless debates with your flatmates about what to watch? The WSWWT IMDb
 - **Title Sharing**: Add your favorite movie and series titles to the rooms, creating a shared watchlist. Think of them as collaborative playlists.
 - **Randomizer**: When the decision-making process becomes overwhelming, just press the "Randomizer" button, and the app will select a movie or a random episode and season for you, saving you from debates and making the choice fun.
 
-
-## Introduction
-
-Do you and your flatmates often find yourselves in endless debates over what movie or series to watch? The WSWWT IMDb Project is here to save the day! This app is designed to make your movie night decisions easier and more enjoyable.
-
-### Key Features
-
-- **Room Creation**: Users can register and create rooms for their apartment, whether they want to keep it private or open it to the community.
-- **Join Public Rooms**: Join public rooms with specific genres of movies and series, where you can discover new titles and like-minded users.
-- **Title Sharing**: Add your favorite movie and series titles to the rooms, creating a shared watchlist.
-- **Randomizer**: When the decision-making process becomes overwhelming, just press the "Randomizer" button, and the app will select a movie or a random episode and season for you, saving you from debates and making the choice fun.
 
 ## Setting Up the Development Environment Locally
 
