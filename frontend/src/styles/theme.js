@@ -1,23 +1,22 @@
-// Updated theme.js
 import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#C69749',  // Brighter gold
-      contrastText: '#FFF',  // White text for better readability
+      main: '#C69749',  
+      contrastText: '#FFF', 
     },
     secondary: {
-      main: '#735F32',  // Darker gold
-      contrastText: '#FFF',  // White text for better readability
+      main: '#735F32',    
+      contrastText: '#FFF', 
     },
     background: {
-      default: '#000000',  // Pure black background
-      paper: '#1C1E28',  // Slightly lighter than before, but still dark
+      default: '#000000',
+      paper: '#1C1E28',  
     },
     text: {
-      primary: '#C69749',  // Brighter gold
-      secondary: '#735F32',  // Darker gold
+      primary: '#C69749',  
+      secondary: '#735F32',  
     },
   },
   typography: {
